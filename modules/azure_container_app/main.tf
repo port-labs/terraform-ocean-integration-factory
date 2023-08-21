@@ -2,6 +2,7 @@ locals {
   prefix = "port-ocean"
   full_subscription_id = var.subscription_id != null ? "/subscriptions/${var.subscription_id}" : null
 }
+data "azurerm_subscription" "current_subscription" {}
 
 resource "azurerm_resource_group" "ocean-rg" {
   count   = var.resource_group_name != null ? 0 : 1

@@ -21,3 +21,7 @@ output "location" {
 output "integration" {
   value = var.integration
 }
+
+output "subscription_id" {
+  value = data.azurerm_subscription.current_subscription.id
+}
