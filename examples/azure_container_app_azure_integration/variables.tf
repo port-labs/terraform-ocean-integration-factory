@@ -60,7 +60,7 @@ variable "action_permissions_list" {
 
 variable "image" {
   type = string
-  default = ""
+  default = null
   description = "The image that the integration will use, if not provided the module will use the latest image"
 }
 
