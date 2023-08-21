@@ -12,9 +12,10 @@ module "ocean-containerapp_example_basic-integration" {
   source  = "port-labs/ocean-containerapp/azure//examples/base"
   version = "=>0.0.4"
   
-  port_client_id = "xxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-  port_client_secret = "xxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
   integration_type = "some-integration"
+  
+  port_client_id = "xxxxx-xxxx-xxxx-xxxx"
+  port_client_secret = "yyyy-yyyy-yyyy-yyyy"
 }
 ```
 
@@ -24,9 +25,9 @@ module "ocean-containerapp_example_azure-integration" {
   source  = "port-labs/ocean-containerapp/azure//examples/azure-integration"
   version = "=>0.0.4"
   
-  port_client_id = "xxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-  port_client_secret = "xxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-  subscription_id = "xxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+  port_client_id = "xxxxx-xxxx-xxxx-xxxx"
+  port_client_secret = "yyyy-yyyy-yyyy-yyyy"
+  hosting_subscription_id = "zzzz-zzzz-zzzz-zzzz"
 }
 ```
 
