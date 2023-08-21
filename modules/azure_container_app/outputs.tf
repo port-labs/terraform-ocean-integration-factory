@@ -18,10 +18,6 @@ output "location" {
   value = var.location
 }
 
-output "subscription_id" {
-  value = module.port_ocean_authorization.subscription_id
-}
-
 output "integration" {
   value = var.integration
 }
