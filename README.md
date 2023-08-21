@@ -15,7 +15,7 @@ Don't run Terraform directly from this repository. Instead, use the examples fro
 e.g. for Azure ContainerApp:
 
 ```hcl
-module "my_azure_containerapp_example_generic_integration" {
+module "my_azure_container_app_example_generic_integration" {
   source  = "port-labs/integration-factory/ocean//examples/azure_container_app_azure_integration"
   version = ">=0.0.7"
   

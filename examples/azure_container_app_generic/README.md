@@ -1,8 +1,8 @@
 ### Example of generic ocean integration over Azure containerApp:
 
 ```hcl
-module "my_azure_containerapp_example_generic_integration" {
-  source  = "port-labs/integration-factory/ocean//examples/azure_container_app_azure_integration"
+module "my_azure_container_app_example_generic_integration" {
+  source  = "port-labs/integration-factory/ocean//examples/azure_container_app_generic"
   version = ">=0.0.7"
   
   integration_type = "some-integration"
@@ -15,7 +15,7 @@ module "my_azure_containerapp_example_generic_integration" {
 ### Example for generic ocean integration over Azure ContainerApp with secrets:
 
 ```hcl
-module "my_azure_containerapp_example_generic_integration_with_secrets" { 
+module "my_azure_container_app_example_generic_integration_with_secrets" { 
   source  = "port-labs/integration-factory/ocean//examples/azure_container_app_generic"
   version = ">=0.0.7"
   
@@ -34,7 +34,7 @@ module "my_azure_containerapp_example_generic_integration_with_secrets" {
 ### Example for generic ocean integration over Azure ContainerApp with environments variables:
 
 ```hcl
-module "my_azure_containerapp_example_generic_integration_with_secrets" { 
+module "my_azure_container_app_example_generic_integration_with_secrets" { 
   source  = "port-labs/integration-factory/ocean//examples/azure_container_app_generic"
   version = ">=0.0.7"
   
@@ -42,7 +42,6 @@ module "my_azure_containerapp_example_generic_integration_with_secrets" {
   
   port_client_id = "xxxxx-xxxx-xxxx-xxxx"
   port_client_secret = "yyyy-yyyy-yyyy-yyyy"
-  hosting_subscription_id = "zzzz-zzzz-zzzz-zzzz"
   
   additional_environments_variables = {
     OCEAN__INTEGRATION__CONFIG__MY_INTEGRATION_ENV = "value"

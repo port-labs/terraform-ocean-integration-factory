@@ -9,7 +9,7 @@ Terraform module which creates Ocean Integration on Azure ContainerApp.
 ### Example of generic ocean integration over Azure containerApp:
 ```hcl
 module "ocean-containerapp_example_basic-integration" {
-  source  = "port-labs/ocean-containerapp/azure//examples/base"
+  source  = "port-labs/integration-factory/ocean//examples/azure_container_app_generic"
   version = ">=0.0.7"
   
   integration_type = "some-integration"
@@ -21,8 +21,8 @@ module "ocean-containerapp_example_basic-integration" {
 
 ### Example for Azure Integration:
 ```hcl
-module "ocean-containerapp_example_azure-integration" {
-  source  = "port-labs/ocean-containerapp/azure//examples/azure-integration"
+module "ocean-container_app_example_azure-integration" {
+  source  = "port-labs/integration-factory/ocean//examples/azure_container_app_azure_integration"
   version = ">=0.0.7"
   
   port_client_id = "xxxxx-xxxx-xxxx-xxxx"
