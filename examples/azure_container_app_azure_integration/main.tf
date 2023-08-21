@@ -60,7 +60,7 @@ resource "azurerm_eventgrid_system_topic_event_subscription" "subscription_event
   # creates a subscription for each chunk of filter values ( 25 per chunk )
   for_each            = local.chunked_resouces_filter_dict
   name                = replace(replace("ocean-${module.ocean_integration.integration.type}-${module.ocean_integration.integration.identifier}-subscription-${each.key}","_", "-"),".","-")
-  resource_group_name = var.event_grid_resource_group != "" ? var.event_grid_resource_group: azurerm_eventgrid_system_topic.subscription_event_grid_topic[0].resource_group_name
+  resource_group_name = var.event_grid_resource_group != "" ? var.event_grid_resource_group: module.ocean_integration.resource_group_name
   system_topic        = var.event_grid_system_topic_name != "" ? var.event_grid_system_topic_name : azurerm_eventgrid_system_topic.subscription_event_grid_topic[0].name
 
   included_event_types = var.included_event_types
