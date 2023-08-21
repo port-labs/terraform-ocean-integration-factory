@@ -7,7 +7,6 @@ module "ocean_integration" {
     client_secret = var.port_client_secret
     base_url = var.port_base_url
   }
-
   initialize_port_resources = var.initialize_port_resources
   event_listener = var.event_listener
 

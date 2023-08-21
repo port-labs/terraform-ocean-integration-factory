@@ -147,5 +147,5 @@ variable "additional_environment_variables" {
 variable "needs_assigned_identity"{
   type = bool
   default = true
-  description = "If true, the module will create an identity for the integration and assign it to the container"
+  description = "If false, no identity will be assigned to the container"
 }

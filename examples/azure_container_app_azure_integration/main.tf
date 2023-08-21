@@ -28,7 +28,7 @@ module "ocean_integration" {
   }
   integration_version = var.integration_version
 
-  # optional port integration parameters
+  needs_assigned_identity = var.needs_assigned_identity
   resource_group_name = var.resource_group_name
   subscription_id = var.hosting_subscription_id
   location = var.location
