@@ -3,7 +3,7 @@
 ```hcl
 module "ocean-containerapp_example_azure-integration" {
   source  = "port-labs/integration-factory/ocean//examples/azure_container_app_azure_integration"
-  version = "=>0.0.7"
+  version = ">=0.0.7"
   
   port_client_id = "xxxxx-xxxx-xxxx-xxxx"
   port_client_secret = "yyyy-yyyy-yyyy-yyyy"
@@ -19,7 +19,7 @@ module "ocean-containerapp_example_azure-integration" {
 ```hcl
 module "ocean-containerapp_example_azure-integration" {
   source  = "port-labs/integration-factory/ocean//examples/azure_container_app_azure_integration"
-  version = "=>0.0.7"
+  version = ">=0.0.7"
   
   port_client_id = "xxxxx-xxxx-xxxx-xxxx"
   port_client_secret = "yyyy-yyyy-yyyy-yyyy"
@@ -36,7 +36,7 @@ module "ocean-containerapp_example_azure-integration" {
 ```hcl
 module "ocean-containerapp_example_azure-integration" {
   source  = "port-labs/integration-factory/ocean//examples/azure_container_app_azure_integration"
-  version = "=>0.0.7"
+  version = ">=0.0.7"
   
   port_client_id = "xxxxx-xxxx-xxxx-xxxx"
   port_client_secret = "yyyy-yyyy-yyyy-yyyy"

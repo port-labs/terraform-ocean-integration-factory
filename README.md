@@ -17,7 +17,7 @@ e.g. for Azure ContainerApp:
 ```hcl
 module "my_azure_containerapp_example_generic_integration" {
   source  = "port-labs/integration-factory/ocean//examples/azure_container_app_azure_integration"
-  version = "=>0.0.7"
+  version = ">=0.0.7"
   
   integration_type = "some-integration"
   

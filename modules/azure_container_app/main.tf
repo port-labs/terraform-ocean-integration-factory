@@ -20,7 +20,7 @@ module "port_ocean_authorization" {
 }
 
 module "port_ocean_container_app" {
-  source= "container_app"
+  source= "./container_app"
   integration = var.integration
   port = var.port
   initialize_port_resources = var.initialize_port_resources
@@ -32,8 +32,8 @@ module "port_ocean_container_app" {
   image = var.image
   min_replicas = var.min_replicas
   max_replicas = var.max_replicas
-  user_assigned_identity_ids = [module.port_ocean_authorization.user_assigned_identity_id]
-  user_assigned_client_id = module.port_ocean_authorization.user_assigned_identity_client_id
+  user_assigned_identity_ids = var.needs_assigned_identity ? [module.port_ocean_authorization[0].user_assigned_identity_id]: []
+  user_assigned_client_id = var.needs_assigned_identity ? module.port_ocean_authorization.user_assigned_identity_client_id: null
   additional_secrets = var.additional_secrets
   additional_environment_variables = var.additional_environment_variables
 }
