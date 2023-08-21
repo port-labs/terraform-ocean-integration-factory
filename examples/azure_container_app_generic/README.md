@@ -3,7 +3,7 @@
 ```hcl
 module "my_azure_containerapp_example_generic_integration" {
   source  = "port-labs/integration-factory/ocean//examples/azure_container_app_azure_integration"
-  version = "=>0.0.4"
+  version = "=>0.0.7"
   
   integration_type = "some-integration"
   
@@ -17,7 +17,7 @@ module "my_azure_containerapp_example_generic_integration" {
 ```hcl
 module "my_azure_containerapp_example_generic_integration_with_secrets" { 
   source  = "port-labs/integration-factory/ocean//examples/azure_container_app_generic"
-  version = "=>0.0.4"
+  version = "=>0.0.7"
   
   integration_type = "some-integration"
   
@@ -36,7 +36,7 @@ module "my_azure_containerapp_example_generic_integration_with_secrets" {
 ```hcl
 module "my_azure_containerapp_example_generic_integration_with_secrets" { 
   source  = "port-labs/integration-factory/ocean//examples/azure_container_app_generic"
-  version = "=>0.0.4"
+  version = "=>0.0.7"
   
   integration_type = "some-integration"
   
