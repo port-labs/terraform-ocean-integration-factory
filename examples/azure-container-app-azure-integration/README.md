@@ -1,1 +1,0 @@
-# azure integration example
