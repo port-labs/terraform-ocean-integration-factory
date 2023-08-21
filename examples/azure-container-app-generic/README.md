@@ -1,0 +1,1 @@
+# azure generic integration example
