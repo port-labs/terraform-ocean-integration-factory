@@ -30,7 +30,7 @@ module "ocean_integration" {
 
   # optional port integration parameters
   resource_group_name = var.resource_group_name
-  subscription_id = "/subscriptions/${var.hosting_subscription_id}"
+  subscription_id = var.hosting_subscription_id
   location = var.location
 
   image = var.image

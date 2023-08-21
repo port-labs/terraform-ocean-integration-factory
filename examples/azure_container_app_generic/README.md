@@ -9,7 +9,6 @@ module "my_azure_containerapp_example_generic_integration" {
   
   port_client_id = "xxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
   port_client_secret = "xxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-  hosting_subscription_id = "xxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
 }
 ```
 
@@ -24,7 +23,6 @@ module "my_azure_containerapp_example_generic_integration_with_secrets" {
   
   port_client_id = "xxxxx-xxxx-xxxx-xxxx"
   port_client_secret = "yyyy-yyyy-yyyy-yyyy"
-  hosting_subscription_id = "zzzz-zzzz-zzzz-zzzz"  
   
   additional_secrets = {
     OCEAN__INTEGRATION__CONFIG__MY_INTEGRATION_SECRET = "value"

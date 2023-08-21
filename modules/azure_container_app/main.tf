@@ -1,5 +1,6 @@
 locals {
   prefix = "port-ocean"
+  full_subscription_id = var.subscription_id != null ? "/subscriptions/${var.subscription_id}" : null
 }
 
 resource "azurerm_resource_group" "ocean-rg" {
@@ -15,7 +16,7 @@ module "port_ocean_authorization" {
   resource_group_name = var.resource_group_name != null ? var.resource_group_name : azurerm_resource_group.ocean-rg[0].name
   integration = var.integration
   permissions = var.permissions
-  subscription_id = var.subscription_id
+  subscription_id = local.full_subscription_id
 }
 
 module "port_ocean_container_app" {

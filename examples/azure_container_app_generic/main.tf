@@ -20,7 +20,7 @@ module "ocean_integration" {
   }
 
   integration_version = var.integration_version
-  subscription_id = "/subscriptions/${var.hosting_subscription_id}"
+  subscription_id = var.hosting_subscription_id
   needs_assigned_identity = var.needs_assigned_identity
 
   resource_group_name = var.resource_group_name
