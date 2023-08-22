@@ -1,10 +1,17 @@
+data "azurerm_subscription" "current_subscription" {}
+
 locals {
   # splits the list into chunks of 25 elements, due to the limit of 25 elements in the advanced filtering for each subscription filter
   # https://learn.microsoft.com/en-us/azure/event-grid/event-filtering#limitations
   chunked_resources_filter_values = chunklist(var.resources_filter_values, 25)
   # creates a dictionary with the index of the chunk as key and the chunk as value
   chunked_resouces_filter_dict = { for i in range(length(local.chunked_resources_filter_values)) : i => local.chunked_resources_filter_values[i] }
+
+  # check if additional_secrets contains OCEAN__INTEGRATION__CONFIG__SUBSCRIPTION_ID if not exists adds it from the current subscription
+  additional_secrets = contains(keys(var.additional_secrets), "OCEAN__INTEGRATION__CONFIG__SUBSCRIPTION_ID") ? var.additional_secrets : merge(var.additional_secrets,
+    {"OCEAN__INTEGRATION__CONFIG__SUBSCRIPTION_ID" = data.azurerm_subscription.current_subscription.subscription_id})
 }
+
 
 module "ocean_integration" {
   source       = "../../modules/azure_container_app"
@@ -42,7 +49,7 @@ module "ocean_integration" {
     not_data_actions = []
   }
   additional_environment_variables = var.additional_environment_variables
-  additional_secrets = var.additional_secrets
+  additional_secrets = local.additional_secrets
 }
 
 resource "azurerm_eventgrid_system_topic" "subscription_event_grid_topic" {

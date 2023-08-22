@@ -7,10 +7,6 @@ module "ocean_container_app_example_azure-integration" {
   
   port_client_id = "xxxxx-xxxx-xxxx-xxxx"
   port_client_secret = "yyyy-yyyy-yyyy-yyyy"
-  
-  additional_secrets = {
-    OCEAN__INTEGRATION__CONFIG__SUBSCRIPTION_ID = "zzzz-zzzz-zzzz-zzzz"
-  }
 }
 ```
 
@@ -23,11 +19,7 @@ module "ocean_container_app_example_azure-integration" {
   
   port_client_id = "xxxxx-xxxx-xxxx-xxxx"
   port_client_secret = "yyyy-yyyy-yyyy-yyyy"
-  hosting_subscription_id = "zzzz-zzzz-zzzz-zzzz"  
-  
-  additional_secrets = {
-    OCEAN__INTEGRATION__CONFIG__SUBSCRIPTION_ID = "zzzz-zzzz-zzzz-zzzz"
-  }
+  hosting_subscription_id = "zzzz-zzzz-zzzz-zzzz"
 }
 ```
 
@@ -40,11 +32,6 @@ module "ocean_container_app_example_azure-integration" {
   
   port_client_id = "xxxxx-xxxx-xxxx-xxxx"
   port_client_secret = "yyyy-yyyy-yyyy-yyyy"
-  hosting_subscription_id = "zzzz-zzzz-zzzz-zzzz"  
-  
-  additional_secrets = {
-    OCEAN__INTEGRATION__CONFIG__SUBSCRIPTION_ID = "zzzz-zzzz-zzzz-zzzz"
-  }
   
   event_grid_system_topic_name = "my-event-grid-system-topic-name"
 }
