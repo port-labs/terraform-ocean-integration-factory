@@ -50,7 +50,7 @@ module "ocean_integration" {
 }
 
 resource "azurerm_eventgrid_system_topic" "subscription_event_grid_topic" {
-  # if the event grid topic name is not provided, the module will create a new one\
+  # if the event grid topic name is not provided, the module will create a new one
   depends_on = [module.ocean_integration]
   count               = var.event_grid_system_topic_name != "" ? 0 : 1
   name                = "subscription-event-grid-topic"
