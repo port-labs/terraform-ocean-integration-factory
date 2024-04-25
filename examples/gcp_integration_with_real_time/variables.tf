@@ -1,9 +1,11 @@
 variable "port_client_id" {
   type        = string
   description = "The Port client id"
+  sensitive = true
 }
 variable "port_client_secret" {
   type        = string
+  sensitive = true
   description = "The Port client secret"
 }
 variable "organization" {
