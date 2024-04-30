@@ -1,3 +1,3 @@
 output "endpoint" {
-    value = google_cloud_run_service.integration_service.status.0.url
+    value = google_cloud_run_v2_service.integration_service.uri
 }
