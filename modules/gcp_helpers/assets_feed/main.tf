@@ -1,5 +1,5 @@
 resource "google_cloud_asset_organization_feed" "ocean_integration_assets_feed" {
-  billing_project= var.billing_project
+  billing_project = var.billing_project
   feed_id         = var.assets_feed_id
   org_id          = var.organization
   content_type    = "RESOURCE"
@@ -12,6 +12,6 @@ resource "google_cloud_asset_organization_feed" "ocean_integration_assets_feed" 
     }
   }
   condition {
-    expression = "'${var.organization}' in temporal_asset.asset.ancestors"
+    expression = "'organizations/${var.organization}' in temporal_asset.asset.ancestors"
   }
 }
