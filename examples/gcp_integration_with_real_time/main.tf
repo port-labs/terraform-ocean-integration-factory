@@ -10,10 +10,17 @@ locals {
   feed_topic_id = var.assets_feed_topic_id != null ? var.assets_feed_topic_id : "ocean-integration-topic"
   permissions = var.ocean_permissions != null ? var.ocean_permissions : ["cloudasset.assets.exportResource",
     "cloudasset.assets.listCloudAssetFeeds",
+    "cloudasset.assets.listResource",
     "cloudasset.assets.searchAllResources",
     "cloudasset.feeds.create",
     "cloudasset.feeds.list",
-  "pubsub.topics.list"]
+    "pubsub.topics.list",
+    "pubsub.topics.get",
+    "resourcemanager.projects.get",
+    "resourcemanager.projects.list",
+    "resourcemanager.folders.get",
+    "resourcemanager.folders.list",
+  "resourcemanager.organizations.get"]
   asset_types = var.assets_types_for_monitoring != null ? var.assets_types_for_monitoring : [
     "cloudresourcemanager.googleapis.com/Organization",
     "cloudresourcemanager.googleapis.com/Project",
