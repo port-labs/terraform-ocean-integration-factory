@@ -20,7 +20,9 @@ locals {
     "resourcemanager.projects.list",
     "resourcemanager.folders.get",
     "resourcemanager.folders.list",
-  "resourcemanager.organizations.get"]
+  "resourcemanager.organizations.get",
+  "run.routes.invoke",
+  "run.jobs.run"]
   asset_types = var.assets_types_for_monitoring != null ? var.assets_types_for_monitoring : [
     "cloudresourcemanager.googleapis.com/Organization",
     "cloudresourcemanager.googleapis.com/Project",
@@ -45,6 +47,7 @@ module "port_ocean_pubsub" {
   push_endpoint              = "${module.port_ocean_cloud_run.endpoint}/integration/events"
   ocean_integration_topic_id = local.feed_topic_id
   project                    = var.ocean_project
+  service_account_email      = module.port_ocean_authorization.service_account_email
 }
 
 module "port_ocean_assets_feed" {
@@ -55,12 +58,17 @@ module "port_ocean_assets_feed" {
   feed_topic         = module.port_ocean_pubsub.ocean_topic_name
   organization       = var.organization
   asset_types        = local.asset_types
+  depends_on = [ module.port_ocean_cloud_run ]
 }
-
+resource "time_sleep" "wait_for_authentication_to_take_affect" {
+  depends_on      = [module.port_ocean_authorization]
+  create_duration = "180s"
+}
 module "port_ocean_cloud_run" {
   source                = "../../modules/gcp_helpers/cloud_run"
   service_account_name  = module.port_ocean_authorization.service_account_name
   environment_variables = local.envs
   project               = var.ocean_project
   image                 = var.image
+  depends_on            = [time_sleep.wait_for_authentication_to_take_affect]
 }
