@@ -15,5 +15,5 @@ variable "service_account_email" {
 
 variable "retention" {
   type    = string
-  default = "7200s" # 2 Hours
+  default = "3600s" # 1 Hour
 }
