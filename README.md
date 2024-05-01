@@ -6,6 +6,7 @@ This repository contains Terraform modules for deploying Ocean integrations on d
 ## Supported Deployment Methods:
 
 - Azure ContainerApp
+- Google Cloud CloudRun
 - AWS ECS (Coming soon)
 
 ## Usage
