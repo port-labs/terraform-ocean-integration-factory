@@ -4,8 +4,7 @@ In here you will deploy a Cloud Run-based GCP Integration service!
 ## Requirements
 
 1. Create an Artifact registry in a GCP project (if you haven't already)
-1. Pull our AMD64 based Docker image: `docker pull ghcr.io/port-labs/port-ocean-gcp --platfo
-rm amd64`
+1. Pull our AMD64 based Docker image: `docker pull ghcr.io/port-labs/port-ocean-gcp --platform amd64`
 1. Push this docker image to the artifact registry from step 1
 1. Make sure you are logged in with `gcloud auth application-default login`
 1. Run `terraform init` from this folder
