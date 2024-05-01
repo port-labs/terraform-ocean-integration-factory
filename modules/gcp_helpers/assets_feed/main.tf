@@ -11,7 +11,4 @@ resource "google_cloud_asset_organization_feed" "ocean_integration_assets_feed" 
       topic = "projects/${var.feed_topic_project}/topics/${var.feed_topic}"
     }
   }
-  condition {
-    expression = "'organizations/${var.organization}' in temporal_asset.asset.ancestors"
-  }
 }
