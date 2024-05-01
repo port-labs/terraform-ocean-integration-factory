@@ -20,8 +20,8 @@ locals {
     "resourcemanager.projects.list",
     "resourcemanager.folders.get",
     "resourcemanager.folders.list",
-  "resourcemanager.organizations.get",
-  "run.routes.invoke",
+    "resourcemanager.organizations.get",
+    "run.routes.invoke",
   "run.jobs.run"]
   asset_types = var.assets_types_for_monitoring != null ? var.assets_types_for_monitoring : [
     "cloudresourcemanager.googleapis.com/Organization",
@@ -58,7 +58,7 @@ module "port_ocean_assets_feed" {
   feed_topic         = module.port_ocean_pubsub.ocean_topic_name
   organization       = var.organization
   asset_types        = local.asset_types
-  depends_on = [ module.port_ocean_cloud_run ]
+  depends_on         = [module.port_ocean_cloud_run]
 }
 resource "time_sleep" "wait_for_authentication_to_take_affect" {
   depends_on      = [module.port_ocean_authorization]
