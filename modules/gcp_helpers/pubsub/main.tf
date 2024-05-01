@@ -18,4 +18,5 @@ resource "google_pubsub_subscription" "ocean_integration_topic_sub" {
     minimum_backoff = "10s"
     maximum_backoff = "600s"
   }
+  message_retention_duration = var.retention
 }
