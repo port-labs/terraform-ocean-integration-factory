@@ -1,5 +1,5 @@
 variable "ocean_integration_topic_id" {
-  type        = string
+  type = string
 }
 variable "push_endpoint" {
   type        = string
@@ -11,4 +11,9 @@ variable "project" {
 
 variable "service_account_email" {
   type = string
+}
+
+variable "retention" {
+  type    = string
+  default = "7200s" # 2 Hours
 }
