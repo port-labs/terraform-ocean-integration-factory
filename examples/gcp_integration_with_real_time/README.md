@@ -15,3 +15,6 @@ In here you will deploy a Cloud Run-based GCP Integration service!
 **Q: Why does the my integration not creating any entities on startup?**
 
 **A:** From the official docs ([link](https://cloud.google.com/iam/docs/manage-access-service-accounts)):  ``In general, policy changes take effect within 2 minutes. However, in some cases, it can take 7 minutes or more for changes to propagate across the system.`` TL;DR- Wait for a few minutes and run RESYNC again. We added a 3min sleep to make sure you are onboarded with all your entities- this may be not enough.
+
+**Q: How can I filter which projects does my integration process?**
+**A:** Change the `var.projects` to a list of project ids relevant to you.
