@@ -1,15 +1,19 @@
 variable "role_id" {
-  type    = string
+  type = string
 }
 variable "service_account_id" {
-  type    = string
+  type = string
 }
 variable "organization" {
-  type    = string
+  type = string
 }
 variable "project" {
-  type    = string
+  type = string
 }
 variable "permissions" {
-    type = list(string)
+  type = list(string)
+}
+variable "projects" {
+  type    = list(string)
+  default = []
 }

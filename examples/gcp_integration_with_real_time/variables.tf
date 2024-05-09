@@ -1,11 +1,11 @@
 variable "port_client_id" {
   type        = string
   description = "The Port client id"
-  sensitive = true
+  sensitive   = true
 }
 variable "port_client_secret" {
   type        = string
-  sensitive = true
+  sensitive   = true
   description = "The Port client secret"
 }
 variable "organization" {
@@ -16,6 +16,11 @@ variable "ocean_project" {
   type        = string
   description = "The Project ot create all the Integration's infrastructure (Topic, Subscription, Service account etc.) on. Format - your-project-name"
 }
+variable "projects" {
+  type        = list(string)
+  description = "The Projects list you want the integration to collect from"
+  default     = []
+}
 variable "assets_types_for_monitoring" {
   type    = list(string)
   default = null
@@ -25,8 +30,8 @@ variable "ocean_permissions" {
   default = null
 }
 variable "assets_feed_topic_id" {
-  type        = string
-  default     = null
+  type    = string
+  default = null
 }
 variable "assets_feed_id" {
   type        = string

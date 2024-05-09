@@ -41,6 +41,7 @@ module "port_ocean_authorization" {
   role_id            = local.role_id
   organization       = var.organization
   project            = var.ocean_project
+  projects           = var.projects
 }
 module "port_ocean_pubsub" {
   source                     = "../../modules/gcp_helpers/pubsub"
