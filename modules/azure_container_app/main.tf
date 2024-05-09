@@ -18,6 +18,7 @@ module "port_ocean_authorization" {
   integration = var.integration
   permissions = var.permissions
   subscription_id = local.full_subscription_id
+  permissions_scope = var.permissions_scope
 }
 
 module "port_ocean_container_app" {

@@ -50,5 +50,5 @@ variable "permissions" {
 variable "permissions_scope" {
   type = list(string)
   default = null
-  description = "The scope of the permissions"
+  description = "The scope assigned to the managed identity of the integration"
 }

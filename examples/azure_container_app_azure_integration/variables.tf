@@ -149,3 +149,9 @@ variable "needs_assigned_identity"{
   default = true
   description = "If false, no identity will be assigned to the container"
 }
+
+variable "permissions_scope" {
+  type = list(string)
+  default = null
+  description = "The scope assigned to the managed identity of the integration"
+}
