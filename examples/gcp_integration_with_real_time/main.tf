@@ -56,6 +56,7 @@ module "port_ocean_assets_feed" {
   feed_topic_project = var.ocean_project
   billing_project    = var.ocean_project
   assets_feed_id     = var.assets_feed_id
+  projects           = var.projects
   feed_topic         = module.port_ocean_pubsub.ocean_topic_name
   organization       = var.organization
   asset_types        = local.asset_types
