@@ -3,64 +3,48 @@ provider "aws" {
   region  = "eu-west-1"
 }
 
-resource "aws_iam_role" "port_ocean_aws_integration_role" {
-  name = "port-ocean-aws-integration-role"
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Effect = "Allow",
-        Principal = {
-          Service = "ecs-tasks.amazonaws.com",
-        },
-        Action = "sts:AssumeRole",
-      },
-    ],
-  })
+locals {
+  security_groups = concat(
+    var.additional_security_groups,
+    var.allow_incoming_requests ? module.port_ocean_ecs_lb[0].security_groups : []
+  )
 }
 
-resource "aws_iam_role_policy_attachment" "port_ocean_aws_integration_task_execution_policy_attachment" {
-  role       = aws_iam_role.port_ocean_aws_integration_role.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+module "port_ocean_ecs_lb" {
+  count                   = var.allow_incoming_requests ? 1 : 0
+  source                  = "./modules/ecs_lb"
+  vpc_id                  = var.vpc_id
+  subnets                 = var.subnets
+  certificate_domain_name = var.certificate_domain_name
 }
 
-resource "aws_ecs_cluster" "port_ocean_aws_integration_cluster" {
-  name = "port-ocean-aws-integration-cluster"
-}
 
-resource "aws_ecs_task_definition" "port_ocean_aws_integration_task_definition" {
-  family                   = "port_ocean_aws_integration"
-  execution_role_arn       = aws_iam_role.port_ocean_aws_integration_role.arn
-  network_mode             = "awsvpc"
-  requires_compatibilities = ["FARGATE"]
+module "port_ocean_ecs" {
+  source = "./modules/ecs_service"
 
-  cpu    = "256"
-  memory = "512"
+  subnets      = var.subnets
+  cluster_name = var.cluster_name
 
 
-  container_definitions = jsonencode([
-    {
-      name  = "busybpx-demo"
-      image = "busybox"
-      "entryPoint" : [
-        "sh",
-        "-c"
-      ],
-      "command" : ["while true; do echo Hello World; sleep 1; done"],
-      essential = true
-    }
-  ])
-}
+  lb_targ_group_arn          = var.allow_incoming_requests ? module.port_ocean_ecs_lb[0].target_group_arn : ""
+  additional_security_groups = var.additional_security_groups
 
-resource "aws_ecs_service" "port_ocean_aws_integration_service" {
-  name            = "port-ocean-aws-integration-service"
-  cluster         = aws_ecs_cluster.port_ocean_aws_integration_cluster.id
-  task_definition = aws_ecs_task_definition.port_ocean_aws_integration_task_definition.arn
-  desired_count   = 1
-  launch_type     = "FARGATE"
+  image_registry = var.image_registry
 
-  network_configuration {
-    subnets         = var.subnets
-    security_groups = []
+  port = {
+    client_id     = var.port.client_id
+    client_secret = var.port.client_secret
+  }
+
+  integration_version       = var.integration_version
+  initialize_port_resources = var.initialize_port_resources
+  event_listener            = var.event_listener
+
+  integration = {
+    type       = var.integration.type
+    identifier = var.integration.identifier
+    config = var.allow_incoming_requests ? merge({
+      app_host = module.port_ocean_ecs_lb[0].dns_name
+    }, var.integration.config) : var.integration.config
   }
 }

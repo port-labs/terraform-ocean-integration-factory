@@ -1,49 +1,3 @@
-variable "vpc_id" {
-  type = string
-}
-
-variable "container_port" {
-  default = 8000
-}
-
-variable "create_default_sg" {
-  type    = bool
-  default = true
-}
-
-variable "additional_security_groups" {
-  type    = list(string)
-  default = []
-}
-
-variable "certificate_domain_name" {
-  type    = string
-  default = ""
-}
-
-variable "additional_secrets" {
-  type = map(string)
-}
-
-variable "subnets" {
-  type = list(string)
-}
-
-variable "is_internal" {
-  type    = bool
-  default = false
-}
-
-variable "create_egress_default_sg" {
-  type    = bool
-  default = true
-}
-
-variable "egress_ports" {
-  type    = list(number)
-  default = []
-}
-
 variable "image_registry" {
   type    = string
   default = "ghcr.io/port-labs"
@@ -65,6 +19,10 @@ variable "logs_cloudwatch_group" {
   default = ""
 }
 
+variable "container_port" {
+  default = 8000
+}
+
 variable "cpu" {
   default = 1024
 }
@@ -77,9 +35,18 @@ variable "network_mode" {
   default = "awsvpc"
 }
 
+variable "additional_security_groups" {
+  type    = list(string)
+  default = []
+}
+
 variable "ecs_use_fargate" {
   type    = bool
   default = true
+}
+
+variable "subnets" {
+  type = list(string)
 }
 
 variable "cluster_name" {
@@ -109,7 +76,6 @@ variable "event_listener" {
     # WEBHOOK
     app_host = optional(string)
 
-
     # KAFKA
     brokers                  = optional(list(string))
     security_protocol        = optional(list(string))
@@ -117,10 +83,6 @@ variable "event_listener" {
     kafka_security_enabled   = optional(list(bool))
     consumer_poll_timeout    = optional(list(number))
   })
-
-  default = {
-    type = "POLLING"
-  }
 }
 
 variable "initialize_port_resources" {
@@ -132,7 +94,7 @@ variable "integration" {
   type = object({
     identifier = optional(string)
     type       = string
-    config     = map(any)
+    config     = any
   })
 }
 
