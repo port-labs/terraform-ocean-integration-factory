@@ -19,5 +19,10 @@ variable "feed_topic" {
   description = "The events digesting topic"
 }
 variable "asset_types" {
-  type        = list(string)
+  type = list(string)
+}
+
+variable "projects" {
+  type    = list(string)
+  default = []
 }
