@@ -64,6 +64,42 @@ data "aws_iam_policy_document" "ecs_assume_role_policy" {
   }
 }
 
+# Task
+
+# Policy document
+data "aws_iam_policy_document" "task_role_account_list_regions_policy" {
+  statement {
+    actions = [
+      "account:ListRegions"
+    ]
+
+    resources = ["*"]
+  }
+}
+# Policy
+resource "aws_iam_policy" "task_role_account_list_regions_policy" {
+  name   = "ecs-task-role-policy-${local.service_name}"
+  policy = data.aws_iam_policy_document.task_role_account_list_regions_policy.json
+}
+# Role
+resource "aws_iam_role" "task_role" {
+  name               = "ecs-task-role-${local.service_name}"
+  assume_role_policy = data.aws_iam_policy_document.ecs_assume_role_policy.json
+}
+# Attach policy to role
+resource "aws_iam_role_policy_attachment" "task_role_readonly_policy_attachment" {
+  role       = aws_iam_role.task_role.name
+  policy_arn = "arn:aws:iam::aws:policy/ReadOnlyAccess"
+}
+# Attach policy to role
+resource "aws_iam_role_policy_attachment" "task_role_account_list_regions_policy_attachment" {
+  role       = aws_iam_role.task_role.name
+  policy_arn = aws_iam_policy.task_role_account_list_regions_policy.arn
+}
+
+# Execution
+
+# Policy document
 data "aws_iam_policy_document" "task_execution_role_policy" {
   dynamic "statement" {
     for_each = var.additional_policy_statements
@@ -103,22 +139,17 @@ data "aws_iam_policy_document" "task_execution_role_policy" {
     ]
   }
 }
-
-resource "aws_iam_role" "task_role" {
-  name               = "ecs-task-role-${local.service_name}"
-  assume_role_policy = data.aws_iam_policy_document.ecs_assume_role_policy.json
-}
-
+# Policy
 resource "aws_iam_policy" "execution-policy" {
   name   = "ecs-task-execution-policy-${local.service_name}"
   policy = data.aws_iam_policy_document.task_execution_role_policy.json
 }
-
+# Role
 resource "aws_iam_role" "task_execution_role" {
   name               = "ecs-task-execution-role-${local.service_name}"
   assume_role_policy = data.aws_iam_policy_document.ecs_assume_role_policy.json
 }
-
+# Attach policy to role
 resource "aws_iam_role_policy_attachment" "attachment" {
   role       = aws_iam_role.task_execution_role.name
   policy_arn = aws_iam_policy.execution-policy.arn
