@@ -21,6 +21,11 @@ variable "certificate_domain_name" {
   default = ""
 }
 
+variable "certificate_arn" {
+  type    = string
+  default = ""
+}
+
 variable "additional_secrets" {
   type = map(string)
 }

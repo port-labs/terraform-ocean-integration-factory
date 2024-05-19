@@ -21,6 +21,11 @@ variable "certificate_domain_name" {
   default = ""
 }
 
+variable "certificate_arn" {
+  type    = string
+  default = ""
+}
+
 variable "subnets" {
   type = list(string)
 }

@@ -16,6 +16,7 @@ module "port_ocean_ecs_lb" {
   vpc_id                  = var.vpc_id
   subnets                 = var.subnets
   certificate_domain_name = var.certificate_domain_name
+  certificate_arn         = var.certificate_arn
 }
 
 
@@ -47,4 +48,10 @@ module "port_ocean_ecs" {
       app_host = module.port_ocean_ecs_lb[0].dns_name
     }, var.integration.config) : var.integration.config
   }
+}
+
+module "api_destinations" {
+  source        = "./modules/api_destinations"
+  api_key_param = var.integration.config.live_events_api_key
+  webhook_url   = var.allow_incoming_requests ? module.port_ocean_ecs_lb[0].dns_name : ""
 }

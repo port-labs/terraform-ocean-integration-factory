@@ -1,13 +1,16 @@
 locals {
-  lb_protocol  = var.certificate_domain_name == "" ? "HTTP" : "HTTPS"
-  lb_port      = var.certificate_domain_name == "" ? "80" : "443"
+  is_certificate_arn_empty         = var.certificate_arn == ""
+  is_certificate_domain_name_empty = var.certificate_domain_name == ""
+  is_certificate                   = !local.is_certificate_domain_name_empty || !local.is_certificate_arn_empty
+  lb_protocol                      = local.is_certificate ? "HTTPS" : "HTTP"
+  lb_port                          = local.is_certificate ? "443" : "80"
   egress_ports = var.create_egress_default_sg ? concat([
     443, 9196, var.container_port
   ], var.egress_ports) : concat(var.egress_ports, [var.container_port])
 }
 
 data "aws_acm_certificate" "acm_certificate" {
-  count  = var.certificate_domain_name != "" ? 1 : 0
+  count  = !local.is_certificate_domain_name_empty && local.is_certificate_arn_empty ? 1 : 0
   domain = var.certificate_domain_name
 }
 
@@ -42,7 +45,7 @@ resource "aws_security_group" "default_ocean_sg" {
 resource "aws_lb" "ocean_lb" {
   internal           = var.is_internal
   load_balancer_type = "application"
-  security_groups    = var.create_default_sg ? concat(
+  security_groups = var.create_default_sg ? concat(
     var.additional_security_groups, [aws_security_group.default_ocean_sg[0].id]
   ) : var.additional_security_groups
   subnets = var.subnets
@@ -78,5 +81,5 @@ resource "aws_lb_listener" "lb_listener" {
   load_balancer_arn = aws_lb.ocean_lb.arn
   port              = local.lb_port
   protocol          = local.lb_protocol
-  certificate_arn   = var.certificate_domain_name != ""? data.aws_acm_certificate.acm_certificate[0].arn : null
+  certificate_arn   = !local.is_certificate_domain_name_empty ? data.aws_acm_certificate.acm_certificate[0].arn : (!local.is_certificate_arn_empty ? var.certificate_arn : null)
 }
