@@ -55,3 +55,12 @@ module "api_destinations" {
   api_key_param = var.integration.config.live_events_api_key
   webhook_url   = var.allow_incoming_requests ? module.port_ocean_ecs_lb[0].dns_name : ""
 }
+
+module "events" {
+  source = "./modules/events"
+
+  api_destination_arn       = module.api_destinations.api_destination.arn
+  api_destination_name      = module.api_destinations.api_destination.name
+  api_destinations_role_arn = module.api_destinations.api_destinations_role.arn
+  event_bus_name            = module.api_destinations.eventbus.name
+}
