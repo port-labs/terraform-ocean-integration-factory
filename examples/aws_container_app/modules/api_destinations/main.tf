@@ -49,6 +49,6 @@ resource "aws_cloudwatch_event_connection" "connection" {
 resource "aws_cloudwatch_event_api_destination" "api_destination" {
   name                = "api-destination-${local.name_suffix}"
   http_method         = "POST"
-  invocation_endpoint = var.webhook_url
+  invocation_endpoint = "${var.webhook_url}/integration/webhook"
   connection_arn      = aws_cloudwatch_event_connection.connection.arn
 }
