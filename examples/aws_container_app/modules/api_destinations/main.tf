@@ -1,5 +1,5 @@
 locals {
-  name_suffix = "port-ocean-aws-exporter" # TODO: Change this to a unique name
+  name_suffix = "port-ocean-aws-exporter"
 }
 
 resource "aws_iam_role" "api_destinations_role" {

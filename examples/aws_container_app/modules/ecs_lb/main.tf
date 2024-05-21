@@ -11,7 +11,6 @@ locals {
 data "aws_acm_certificate" "acm_certificate" {
   count  = !local.is_certificate_domain_name_empty ? 1 : 0
   domain = var.certificate_domain_name
-  statuses = ["ISSUED"]
 }
 
 resource "aws_security_group" "default_ocean_sg" {

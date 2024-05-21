@@ -12,7 +12,6 @@ resource "aws_cloudwatch_event_rule" "s3_event_bridge_rule" {
   })
 }
 
-# TODO: Add input transformer prefix
 resource "aws_cloudwatch_event_target" "s3_event_bridge_target" {
   rule           = aws_cloudwatch_event_rule.s3_event_bridge_rule.name
   target_id      = var.api_destination_name
@@ -46,7 +45,7 @@ resource "aws_cloudwatch_event_rule" "cloudformation_cloud_trail_event_bridge_ru
     detail-type = ["AWS API Call via CloudTrail"]
     detail = {
       eventSource = ["cloudformation.amazonaws.com"]
-      eventName   = ["CreateStack", "UpdateStack", "DeleteStack"]
+      eventName   = [{prefix: "CreateStack"}, {prefix: "UpdateStack"}, {prefix: "DeleteStack"}]
     }
   })
 }
@@ -63,13 +62,15 @@ resource "aws_cloudwatch_event_target" "CloudformationCloudTrailEventBridgeTarge
       awsRegion = "$.detail.awsRegion"
       stackName = "$.detail.requestParameters.stackName"
     }
-    input_template = jsonencode({
-      resource_type = "AWS::CloudFormation::Stack"
-      accountId     = "<accountId>"
-      awsRegion     = "<awsRegion>"
-      eventName     = "<eventName>"
-      identifier    = "<stackName>"
-    })
+    input_template = <<EOF
+{
+  "resource_type": "AWS::CloudFormation::Stack",
+  "accountId": "<accountId>",
+  "awsRegion": "<awsRegion>",
+  "eventName": "<eventName>",
+  "identifier": "<stackName>"
+}
+EOF
   }
 }
 
@@ -94,13 +95,15 @@ resource "aws_cloudwatch_event_target" "cloudformation_status_event_bridge_targe
       stackId   = "$.detail.stack-id"
       status    = "$.detail.status-details.status"
     }
-    input_template = jsonencode({
-      resource_type = "AWS::CloudFormation::Stack"
-      accountId     = "<accountId>"
-      awsRegion     = "<region>"
-      identifier    = "<stackId>"
-      eventName     = "if <status> == 'DELETE_COMPLETE' then 'delete' else 'upsert' end"
-    })
+    input_template = <<EOF
+{
+  "resource_type": "AWS::CloudFormation::Stack",
+  "accountId": "<accountId>",
+  "awsRegion": "<region>",
+  "identifier": "<stackId>",
+  "eventName": "if <status> == 'DELETE_COMPLETE' then 'delete' else 'upsert' end"
+}
+EOF
   }
 }
 
@@ -113,7 +116,7 @@ resource "aws_cloudwatch_event_rule" "ec2_instance_tags_event_rule" {
     detail-type = ["AWS API Call via CloudTrail"]
     detail = {
       eventSource = ["ec2.amazonaws.com"]
-      eventName   = ["DeleteTags", "CreateTags"]
+      eventName   = [{prefix: "DeleteTags"}, {prefix: "CreateTags"}]
     }
   })
 }
@@ -130,13 +133,15 @@ resource "aws_cloudwatch_event_target" "ec2_instance_tags_event_target" {
       awsRegion  = "$.detail.awsRegion"
       instanceId = "$.detail.requestParameters.resourcesSet.items[0].resourceId"
     }
-    input_template = jsonencode({
-      resource_type = "AWS::EC2::Instance"
-      accountId     = "<accountId>"
-      awsRegion     = "<awsRegion>"
-      identifier    = "<instanceId>"
-      eventName     = "<eventName>"
-    })
+    input_template = <<EOF
+{
+  "resource_type": "AWS::EC2::Instance",
+  "accountId": "<accountId>",
+  "awsRegion": "<awsRegion>",
+  "identifier": "<instanceId>",
+  "eventName": "<eventName>"
+}
+EOF
   }
 }
 
@@ -162,12 +167,14 @@ resource "aws_cloudwatch_event_target" "ec2_instance_status_change_event_target"
       instanceId = "$.detail.instance-id"
       status     = "$.detail.state"
     }
-    input_template = jsonencode({
-      resource_type = "AWS::EC2::Instance"
-      accountId     = "<accountId>"
-      awsRegion     = "<region>"
-      identifier    = "<instanceId>"
-      eventName     = "if <status> == 'terminated' then 'delete' else 'upsert' end"
-    })
+    input_template = <<EOF
+{
+  "resource_type": "AWS::EC2::Instance",
+  "accountId": "<accountId>",
+  "awsRegion": "<region>",
+  "identifier": "<instanceId>",
+  "eventName": "if <status> == 'terminated' then 'delete' else 'upsert' end"
+}
+EOF
   }
 }

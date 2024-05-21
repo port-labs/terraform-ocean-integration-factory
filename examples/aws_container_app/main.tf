@@ -11,8 +11,8 @@ locals {
 }
 
 module "port_ocean_ecs_lb" {
-  count                   = var.allow_incoming_requests ? 1 : 0
   source                  = "./modules/ecs_lb"
+  count                   = var.allow_incoming_requests ? 1 : 0
   vpc_id                  = var.vpc_id
   subnets                 = var.subnets
   certificate_domain_name = var.certificate_domain_name

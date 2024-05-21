@@ -10,6 +10,9 @@ output "target_group_arn" {
   value = aws_lb_target_group.ocean_tg.arn
 }
 
+output "load_balancer_dns_name" {
+  value = aws_lb.ocean_lb.dns_name
+}
 output "security_groups" {
   value = var.create_default_sg ? concat(
     var.additional_security_groups, [aws_security_group.default_ocean_sg[0].id]
