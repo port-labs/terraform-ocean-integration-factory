@@ -44,3 +44,8 @@ variable "egress_ports" {
   type    = list(number)
   default = []
 }
+
+variable "app_host" {
+  type = string
+  default = ""
+}

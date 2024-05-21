@@ -2,11 +2,6 @@ locals {
   name_suffix = "port-ocean-aws-exporter" # TODO: Change this to a unique name
 }
 
-
-resource "aws_cloudwatch_event_bus" "eventbus" {
-  name = "port-ocean-aws-exporter-eventbus-${local.name_suffix}"
-}
-
 resource "aws_iam_role" "api_destinations_role" {
   name = "api-destinations-role-${local.name_suffix}"
   assume_role_policy = jsonencode({

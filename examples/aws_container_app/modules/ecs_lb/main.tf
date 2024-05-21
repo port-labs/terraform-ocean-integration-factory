@@ -1,7 +1,6 @@
 locals {
-  is_certificate_arn_empty         = var.certificate_arn == ""
   is_certificate_domain_name_empty = var.certificate_domain_name == ""
-  is_certificate                   = !local.is_certificate_domain_name_empty || !local.is_certificate_arn_empty
+  is_certificate                   = !local.is_certificate_domain_name_empty
   lb_protocol                      = local.is_certificate ? "HTTPS" : "HTTP"
   lb_port                          = local.is_certificate ? "443" : "80"
   egress_ports = var.create_egress_default_sg ? concat([
@@ -10,8 +9,9 @@ locals {
 }
 
 data "aws_acm_certificate" "acm_certificate" {
-  count  = !local.is_certificate_domain_name_empty && local.is_certificate_arn_empty ? 1 : 0
+  count  = !local.is_certificate_domain_name_empty ? 1 : 0
   domain = var.certificate_domain_name
+  statuses = ["ISSUED"]
 }
 
 resource "aws_security_group" "default_ocean_sg" {
@@ -81,5 +81,5 @@ resource "aws_lb_listener" "lb_listener" {
   load_balancer_arn = aws_lb.ocean_lb.arn
   port              = local.lb_port
   protocol          = local.lb_protocol
-  certificate_arn   = !local.is_certificate_domain_name_empty ? data.aws_acm_certificate.acm_certificate[0].arn : (!local.is_certificate_arn_empty ? var.certificate_arn : null)
+  certificate_arn   = !local.is_certificate_domain_name_empty ? data.aws_acm_certificate.acm_certificate[0].arn : null
 }

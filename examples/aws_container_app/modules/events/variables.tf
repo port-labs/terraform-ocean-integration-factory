@@ -12,9 +12,3 @@ variable "api_destinations_role_arn" {
   description = "The API Key parameter"
   type        = string
 }
-
-variable "event_bus_name" {
-  description = "The name of the Event Bus"
-  type        = string
-  default     = "default"
-}

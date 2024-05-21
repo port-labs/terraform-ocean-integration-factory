@@ -2,23 +2,22 @@
 resource "aws_cloudwatch_event_rule" "s3_event_bridge_rule" {
   name           = "port-aws-ocean-sync-s3-trails"
   description    = "Capture S3 events"
-  event_bus_name = var.event_bus_name
   event_pattern = jsonencode({
     source      = ["aws.s3"]
     detail-type = ["AWS API Call via CloudTrail"]
     detail = {
       eventSource = ["s3.amazonaws.com"]
-      eventName   = ["CreateBucket", "PutBucket", "DeleteBucket"]
+      eventName   = [{ prefix : "CreateBucket" }, { prefix : "PutBucket" }, { prefix : "DeleteBucket" }]
     }
   })
 }
 
+# TODO: Add input transformer prefix
 resource "aws_cloudwatch_event_target" "s3_event_bridge_target" {
   rule           = aws_cloudwatch_event_rule.s3_event_bridge_rule.name
   target_id      = var.api_destination_name
   arn            = var.api_destination_arn
   role_arn       = var.api_destinations_role_arn
-  event_bus_name = var.event_bus_name
   input_transformer {
     input_paths = {
       accountId         = "$.detail.userIdentity.accountId"
@@ -26,13 +25,15 @@ resource "aws_cloudwatch_event_target" "s3_event_bridge_target" {
       eventName         = "$.detail.eventName"
       requestBucketName = "$.detail.requestParameters.bucketName"
     }
-    input_template = jsonencode({
-      resource_type = "AWS::S3::Bucket"
-      accountId     = "<accountId>"
-      awsRegion     = "<awsRegion>"
-      eventName     = "<eventName>"
-      identifier    = "<requestBucketName>"
-    })
+    input_template = <<EOF
+{
+  "resource_type": "AWS::S3::Bucket",
+  "accountId": "<accountId>",
+  "awsRegion": "<awsRegion>",
+  "eventName": "<eventName>",
+  "identifier": "<requestBucketName>"
+}
+EOF
   }
 }
 
@@ -40,7 +41,6 @@ resource "aws_cloudwatch_event_target" "s3_event_bridge_target" {
 resource "aws_cloudwatch_event_rule" "cloudformation_cloud_trail_event_bridge_rule" {
   name           = "port-aws-ocean-sync-cloudformation-trails"
   description    = "Capture CloudFormation events"
-  event_bus_name = var.event_bus_name
   event_pattern = jsonencode({
     source      = ["aws.cloudformation"]
     detail-type = ["AWS API Call via CloudTrail"]
@@ -56,7 +56,6 @@ resource "aws_cloudwatch_event_target" "CloudformationCloudTrailEventBridgeTarge
   target_id      = var.api_destination_name
   arn            = var.api_destination_arn
   role_arn       = var.api_destinations_role_arn
-  event_bus_name = var.event_bus_name
   input_transformer {
     input_paths = {
       accountId = "$.detail.userIdentity.accountId"
@@ -77,7 +76,6 @@ resource "aws_cloudwatch_event_target" "CloudformationCloudTrailEventBridgeTarge
 resource "aws_cloudwatch_event_rule" "cloudformation_status_event_bridge_rule" {
   name           = "port-aws-ocean-sync-cloudformation-status-change-trails"
   description    = "Capture CloudFormation status change events"
-  event_bus_name = var.event_bus_name
   event_pattern = jsonencode({
     source      = ["aws.cloudformation"]
     detail-type = ["CloudFormation Stack Status Change"]
@@ -89,7 +87,6 @@ resource "aws_cloudwatch_event_target" "cloudformation_status_event_bridge_targe
   target_id      = var.api_destination_name
   arn            = var.api_destination_arn
   role_arn       = var.api_destinations_role_arn
-  event_bus_name = var.event_bus_name
   input_transformer {
     input_paths = {
       accountId = "$.detail.userIdentity.accountId"
@@ -111,7 +108,6 @@ resource "aws_cloudwatch_event_target" "cloudformation_status_event_bridge_targe
 resource "aws_cloudwatch_event_rule" "ec2_instance_tags_event_rule" {
   name           = "port-aws-ocean-sync-ec2-tags-trails"
   description    = "Capture EC2 instance tag events"
-  event_bus_name = var.event_bus_name
   event_pattern = jsonencode({
     source      = ["aws.ec2"]
     detail-type = ["AWS API Call via CloudTrail"]
@@ -127,7 +123,6 @@ resource "aws_cloudwatch_event_target" "ec2_instance_tags_event_target" {
   target_id      = var.api_destination_name
   arn            = var.api_destination_arn
   role_arn       = var.api_destinations_role_arn
-  event_bus_name = var.event_bus_name
   input_transformer {
     input_paths = {
       accountId  = "$.detail.userIdentity.accountId"
@@ -148,7 +143,6 @@ resource "aws_cloudwatch_event_target" "ec2_instance_tags_event_target" {
 resource "aws_cloudwatch_event_rule" "ec2_instance_status_change_event_rule" {
   name           = "port-aws-exporter-sync-ec2-instance-status-change-trails"
   description    = "Capture EC2 instance status change events"
-  event_bus_name = var.event_bus_name
   event_pattern = jsonencode({
     source      = ["aws.ec2"]
     detail-type = ["EC2 Instance State-change Notification"]
@@ -160,7 +154,6 @@ resource "aws_cloudwatch_event_target" "ec2_instance_status_change_event_target"
   target_id      = var.api_destination_name
   arn            = var.api_destination_arn
   role_arn       = var.api_destinations_role_arn
-  event_bus_name = var.event_bus_name
 
   input_transformer {
     input_paths = {

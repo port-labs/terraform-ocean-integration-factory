@@ -16,7 +16,6 @@ module "port_ocean_ecs_lb" {
   vpc_id                  = var.vpc_id
   subnets                 = var.subnets
   certificate_domain_name = var.certificate_domain_name
-  certificate_arn         = var.certificate_arn
 }
 
 
@@ -62,5 +61,4 @@ module "events" {
   api_destination_arn       = module.api_destinations.api_destination.arn
   api_destination_name      = module.api_destinations.api_destination.name
   api_destinations_role_arn = module.api_destinations.api_destinations_role.arn
-  event_bus_name            = module.api_destinations.eventbus.name
 }
