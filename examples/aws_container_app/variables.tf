@@ -18,7 +18,6 @@ variable "additional_security_groups" {
 
 variable "certificate_domain_name" {
   type    = string
-  default = ""
 }
 
 variable "certificate_arn" {
