@@ -44,7 +44,7 @@ variable "service_account_name" {
 }
 variable "role_name" {
   type    = string
-  default = "hellorole"
+  default = null
 }
 variable "gcp_ocean_integration_image" {
   type        = string
