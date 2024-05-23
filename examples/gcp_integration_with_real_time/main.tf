@@ -3,12 +3,32 @@ locals {
     {
       name  = "PORT_CLIENT_ID",
       value = var.port_client_id
-      }, {
+    },
+    {
       name  = "PORT_CLIENT_SECRET",
       value = var.port_client_secret
-  }]
+    },
+    {
+      name  = upper("OCEAN__INITIALIZE_PORT_RESOURCES"),
+      value = var.initialize_port_resources ? "true" : "false"
+    },
+    {
+      name = upper("OCEAN__EVENT_LISTENER")
+      value = jsonencode({
+        for key, value in var.event_listener : key => value if value != null
+      })
+    },
+    {
+      name = upper("OCEAN__INTEGRATION")
+      value = jsonencode({
+        "identifier": var.integration_identifier,
+        "type": var.integration_type,
+        "config": {}
+      })
+    }
+  ]
   feed_topic_id = var.assets_feed_topic_id != null ? var.assets_feed_topic_id : "ocean-integration-topic"
-  permissions = var.ocean_permissions != null ? var.ocean_permissions : ["cloudasset.assets.exportResource",
+  permissions = var.gcp_ocean_integration_sa_permissions != null ? var.gcp_ocean_integration_sa_permissions : ["cloudasset.assets.exportResource",
     "cloudasset.assets.listCloudAssetFeeds",
     "cloudasset.assets.listResource",
     "cloudasset.assets.searchAllResources",
@@ -39,26 +59,26 @@ module "port_ocean_authorization" {
   permissions        = local.permissions
   service_account_id = local.service_account_id
   role_id            = local.role_id
-  organization       = var.organization
-  project            = var.ocean_project
-  projects           = var.projects
+  organization       = var.gcp_organization
+  project            = var.gcp_ocean_setup_project
+  projects           = var.gcp_projects
 }
 module "port_ocean_pubsub" {
   source                     = "../../modules/gcp_helpers/pubsub"
   push_endpoint              = "${module.port_ocean_cloud_run.endpoint}/integration/events"
   ocean_integration_topic_id = local.feed_topic_id
-  project                    = var.ocean_project
+  project                    = var.gcp_ocean_setup_project
   service_account_email      = module.port_ocean_authorization.service_account_email
 }
 
 module "port_ocean_assets_feed" {
   source             = "../../modules/gcp_helpers/assets_feed"
-  feed_topic_project = var.ocean_project
-  billing_project    = var.ocean_project
+  feed_topic_project = var.gcp_ocean_setup_project
+  billing_project    = var.gcp_ocean_setup_project
   assets_feed_id     = var.assets_feed_id
-  projects           = var.projects
+  projects           = var.gcp_projects
   feed_topic         = module.port_ocean_pubsub.ocean_topic_name
-  organization       = var.organization
+  organization       = var.gcp_organization
   asset_types        = local.asset_types
   depends_on         = [module.port_ocean_cloud_run]
 }
@@ -70,7 +90,7 @@ module "port_ocean_cloud_run" {
   source                = "../../modules/gcp_helpers/cloud_run"
   service_account_name  = module.port_ocean_authorization.service_account_name
   environment_variables = local.envs
-  project               = var.ocean_project
-  image                 = var.image
+  project               = var.gcp_ocean_setup_project
+  image                 = var.gcp_ocean_integration_image
   depends_on            = [time_sleep.wait_for_authentication_to_take_affect]
 }
