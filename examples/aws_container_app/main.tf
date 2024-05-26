@@ -52,11 +52,13 @@ module "port_ocean_ecs" {
 module "api_gateway" {
   source = "./modules/api_gateway"
   webhook_url = var.allow_incoming_requests ? module.port_ocean_ecs_lb[0].dns_name : ""
+  count = var.allow_incoming_requests ? 1 : 0
 }
 
 module "events" {
   source = "./modules/events"
+  count = var.allow_incoming_requests ? 1 : 0
 
   api_key_param = var.integration.config.live_events_api_key
-  target_arn    = module.api_gateway.integration_webhook_api_arn
+  target_arn    = var.allow_incoming_requests ? module.api_gateway[0].integration_webhook_api_arn : ""
 }
