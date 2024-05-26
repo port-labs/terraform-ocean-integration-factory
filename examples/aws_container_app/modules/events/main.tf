@@ -14,9 +14,14 @@ resource "aws_cloudwatch_event_rule" "s3_event_bridge_rule" {
 
 resource "aws_cloudwatch_event_target" "s3_event_bridge_target" {
   rule           = aws_cloudwatch_event_rule.s3_event_bridge_rule.name
-  target_id      = var.api_destination_name
-  arn            = var.api_destination_arn
-  role_arn       = var.api_destinations_role_arn
+  arn            = var.target_arn
+
+  http_target {
+    header_parameters = {
+      "Content-Type" = "application/json"
+      "x-port-aws-ocean-api-key" = var.api_key_param
+    }
+  }
   input_transformer {
     input_paths = {
       accountId         = "$.detail.userIdentity.accountId"
@@ -52,9 +57,13 @@ resource "aws_cloudwatch_event_rule" "cloudformation_cloud_trail_event_bridge_ru
 
 resource "aws_cloudwatch_event_target" "CloudformationCloudTrailEventBridgeTarget" {
   rule           = aws_cloudwatch_event_rule.cloudformation_cloud_trail_event_bridge_rule.name
-  target_id      = var.api_destination_name
-  arn            = var.api_destination_arn
-  role_arn       = var.api_destinations_role_arn
+  arn            = var.target_arn
+  http_target {
+    header_parameters = {
+      "Content-Type" = "application/json"
+      "x-port-aws-ocean-api-key" = var.api_key_param
+    }
+  }
   input_transformer {
     input_paths = {
       accountId = "$.detail.userIdentity.accountId"
@@ -85,9 +94,14 @@ resource "aws_cloudwatch_event_rule" "cloudformation_status_event_bridge_rule" {
 
 resource "aws_cloudwatch_event_target" "cloudformation_status_event_bridge_target" {
   rule           = aws_cloudwatch_event_rule.cloudformation_status_event_bridge_rule.name
-  target_id      = var.api_destination_name
-  arn            = var.api_destination_arn
-  role_arn       = var.api_destinations_role_arn
+  arn            = var.target_arn
+
+  http_target {
+    header_parameters = {
+      "Content-Type" = "application/json"
+      "x-port-aws-ocean-api-key" = var.api_key_param
+    }
+  }
   input_transformer {
     input_paths = {
       accountId = "$.detail.userIdentity.accountId"
@@ -123,9 +137,15 @@ resource "aws_cloudwatch_event_rule" "ec2_instance_tags_event_rule" {
 
 resource "aws_cloudwatch_event_target" "ec2_instance_tags_event_target" {
   rule           = aws_cloudwatch_event_rule.ec2_instance_tags_event_rule.name
-  target_id      = var.api_destination_name
-  arn            = var.api_destination_arn
-  role_arn       = var.api_destinations_role_arn
+  arn            = var.target_arn
+  
+  http_target {
+    header_parameters = {
+      "Content-Type" = "application/json"
+      "x-port-aws-ocean-api-key" = var.api_key_param
+    }
+  }
+
   input_transformer {
     input_paths = {
       accountId  = "$.detail.userIdentity.accountId"
@@ -156,9 +176,14 @@ resource "aws_cloudwatch_event_rule" "ec2_instance_status_change_event_rule" {
 
 resource "aws_cloudwatch_event_target" "ec2_instance_status_change_event_target" {
   rule           = aws_cloudwatch_event_rule.ec2_instance_status_change_event_rule.name
-  target_id      = var.api_destination_name
-  arn            = var.api_destination_arn
-  role_arn       = var.api_destinations_role_arn
+  arn            = var.target_arn
+  
+  http_target {
+    header_parameters = {
+      "Content-Type" = "application/json"
+      "x-port-aws-ocean-api-key" = var.api_key_param
+    }
+  }
 
   input_transformer {
     input_paths = {

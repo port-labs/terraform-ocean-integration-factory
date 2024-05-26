@@ -11,7 +11,7 @@ locals {
   env = [
     {
       name  = upper("OCEAN__PORT__BASE_URL"), #TODO: delete this
-      value = "https://36e5-84-109-77-110.ngrok-free.app"
+      value = "https://zan8dzirzz2r.share.zrok.io"
     },
     {
       name  = upper("OCEAN__INITIALIZE_PORT_RESOURCES"),

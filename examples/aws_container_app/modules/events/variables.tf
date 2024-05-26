@@ -1,14 +1,14 @@
-variable "api_destination_arn" {
-  description = "The ARN of the API Destination"
+variable "target_arn" {
+  description = "The ARN of the target"
   type        = string
 }
 
-variable "api_destination_name" {
-  description = "The name of the API Destination"
-  type        = string
-}
-
-variable "api_destinations_role_arn" {
+variable "api_key_param" {
   description = "The API Key parameter"
   type        = string
 }
+
+# variable "api_destinations_role_arn" {
+#   description = "The API Key parameter"
+#   type        = string
+# }

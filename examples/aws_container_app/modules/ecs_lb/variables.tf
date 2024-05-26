@@ -46,6 +46,6 @@ variable "egress_ports" {
 }
 
 variable "app_host" {
-  type = string
+  type    = string
   default = ""
 }
