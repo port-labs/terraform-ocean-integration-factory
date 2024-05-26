@@ -11,7 +11,7 @@ locals {
 }
 
 module "port_ocean_ecs_lb" {
-  source                  = "./modules/ecs_lb"
+  source                  = "../../modules/aws_helpers/ecs_lb"
   count                   = var.allow_incoming_requests ? 1 : 0
   vpc_id                  = var.vpc_id
   subnets                 = var.subnets
@@ -20,7 +20,7 @@ module "port_ocean_ecs_lb" {
 
 
 module "port_ocean_ecs" {
-  source = "./modules/ecs_service"
+  source = "../../modules/aws_helpers/ecs_service"
 
   subnets      = var.subnets
   cluster_name = var.cluster_name
@@ -50,13 +50,13 @@ module "port_ocean_ecs" {
 }
 
 module "api_gateway" {
-  source = "./modules/api_gateway"
+  source = "../../modules/aws_helpers/api_gateway"
   webhook_url = var.allow_incoming_requests ? module.port_ocean_ecs_lb[0].dns_name : ""
   count = var.allow_incoming_requests ? 1 : 0
 }
 
 module "events" {
-  source = "./modules/events"
+  source = "../../modules/aws_helpers/events"
   count = var.allow_incoming_requests ? 1 : 0
 
   api_key_param = var.integration.config.live_events_api_key
