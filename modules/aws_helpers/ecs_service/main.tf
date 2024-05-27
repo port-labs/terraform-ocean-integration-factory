@@ -199,7 +199,7 @@ resource "aws_ecs_task_definition" "service_task_definition" {
 }
 
 resource "aws_ecs_cluster" "port_ocean_aws_integration_cluster" {
-  name = "port-ocean-aws-integration-cluster"
+  name = "port-ocean-aws-integration-cluster" #TODO: use variable
 }
 
 resource "aws_ecs_service" "ecs_service" {
