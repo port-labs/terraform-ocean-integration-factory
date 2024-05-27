@@ -143,6 +143,11 @@ variable "event_listener" {
     type = "POLLING"
   }
 
+  validation {
+    condition     = can(regex("^(POLLING|KAFKA|WEBHOOK)$", var.event_listener.type))
+    error_message = "event_listener.type must be one of POLLING, KAFKA, or WEBHOOK"
+  }
+
   description = "The event listener configuration"
 }
 
