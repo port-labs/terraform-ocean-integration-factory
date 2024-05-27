@@ -1,11 +1,11 @@
 variable "rest_api_name" {
-  description = "The name of the REST API"
   type        = string
   default     = "port-ocean-aws-exporter"
+  description = "The name of the REST API"
 }
 
 variable "webhook_url" {
-  description = "The webhook URL"
   type        = string
   default     = "https://<your-app-url>/integration/webhook"
+  description = "The webhook URL"
 }
