@@ -10,17 +10,17 @@ locals {
 
   env = [
     {
-      name  = upper("OCEAN__INITIALIZE_PORT_RESOURCES"),
+      name  = "OCEAN__INITIALIZE_PORT_RESOURCES",
       value = var.initialize_port_resources ? "true" : "false"
     },
     {
-      name = upper("OCEAN__EVENT_LISTENER")
+      name = "OCEAN__EVENT_LISTENER"
       value = jsonencode({
         for key, value in var.event_listener : key => value if value != null
       })
     },
     {
-      name  = upper("OCEAN__INTEGRATION")
+      name  = "OCEAN__INTEGRATION"
       value = jsonencode(var.integration)
     }
   ]
