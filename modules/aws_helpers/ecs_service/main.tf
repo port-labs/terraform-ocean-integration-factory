@@ -221,15 +221,15 @@ resource "aws_ecs_service" "ecs_service" {
   desired_count                      = 1
   enable_ecs_managed_tags            = "false"
   enable_execute_command             = "false"
-  health_check_grace_period_seconds  = var.lb_targ_group_arn != "" ? "30" : "0"
+  health_check_grace_period_seconds  = var.lb_target_group_arn != "" ? "30" : "0"
   launch_type                        = "FARGATE"
 
   dynamic "load_balancer" {
-    for_each = var.lb_targ_group_arn != "" ? [1] : []
+    for_each = var.lb_target_group_arn != "" ? [1] : []
     content {
       container_name   = local.service_name
       container_port   = var.container_port
-      target_group_arn = var.lb_targ_group_arn
+      target_group_arn = var.lb_target_group_arn
     }
   }
 

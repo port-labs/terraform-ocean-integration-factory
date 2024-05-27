@@ -22,7 +22,7 @@ module "port_ocean_ecs" {
   cluster_name = var.cluster_name
 
 
-  lb_targ_group_arn          = var.allow_incoming_requests ? module.port_ocean_ecs_lb[0].target_group_arn : ""
+  lb_target_group_arn         = var.allow_incoming_requests ? module.port_ocean_ecs_lb[0].target_group_arn : ""
   ecs_service_security_groups = local.ec2_service_security_groups
 
   image_registry = var.image_registry

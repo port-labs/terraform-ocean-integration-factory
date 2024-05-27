@@ -115,7 +115,7 @@ variable "integration" {
   description = "The integration configuration"
 }
 
-variable "lb_targ_group_arn" {
+variable "lb_target_group_arn" {
   type        = string
   default     = ""
   description = "The ARN of the target group to attach to the ECS service"
