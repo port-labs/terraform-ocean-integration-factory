@@ -51,6 +51,8 @@ variable "subnets" {
 
 variable "cluster_name" {
   type = string
+  default = "port-ocean-aws-integration-cluster"
+  description = "The name of the ECS cluster"
 }
 
 variable "assign_public_ip" {
