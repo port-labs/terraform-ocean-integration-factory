@@ -1,7 +1,7 @@
 # S3
 resource "aws_cloudwatch_event_rule" "s3_event_bridge_rule" {
-  name           = "port-aws-ocean-sync-s3-trails"
-  description    = "Capture S3 events"
+  name        = "port-aws-ocean-sync-s3-trails"
+  description = "Capture S3 events"
   event_pattern = jsonencode({
     source      = ["aws.s3"]
     detail-type = ["AWS API Call via CloudTrail"]
@@ -13,12 +13,12 @@ resource "aws_cloudwatch_event_rule" "s3_event_bridge_rule" {
 }
 
 resource "aws_cloudwatch_event_target" "s3_event_bridge_target" {
-  rule           = aws_cloudwatch_event_rule.s3_event_bridge_rule.name
-  arn            = var.target_arn
+  rule = aws_cloudwatch_event_rule.s3_event_bridge_rule.name
+  arn  = var.target_arn
 
   http_target {
     header_parameters = {
-      "Content-Type" = "application/json"
+      "Content-Type"             = "application/json"
       "x-port-aws-ocean-api-key" = var.api_key_param
     }
   }
@@ -43,24 +43,24 @@ EOF
 
 # CloudFormation
 resource "aws_cloudwatch_event_rule" "cloudformation_cloud_trail_event_bridge_rule" {
-  name           = "port-aws-ocean-sync-cloudformation-trails"
-  description    = "Capture CloudFormation events"
+  name        = "port-aws-ocean-sync-cloudformation-trails"
+  description = "Capture CloudFormation events"
   event_pattern = jsonencode({
     source      = ["aws.cloudformation"]
     detail-type = ["AWS API Call via CloudTrail"]
     detail = {
       eventSource = ["cloudformation.amazonaws.com"]
-      eventName   = [{prefix: "CreateStack"}, {prefix: "UpdateStack"}, {prefix: "DeleteStack"}]
+      eventName   = [{ prefix : "CreateStack" }, { prefix : "UpdateStack" }, { prefix : "DeleteStack" }]
     }
   })
 }
 
 resource "aws_cloudwatch_event_target" "CloudformationCloudTrailEventBridgeTarget" {
-  rule           = aws_cloudwatch_event_rule.cloudformation_cloud_trail_event_bridge_rule.name
-  arn            = var.target_arn
+  rule = aws_cloudwatch_event_rule.cloudformation_cloud_trail_event_bridge_rule.name
+  arn  = var.target_arn
   http_target {
     header_parameters = {
-      "Content-Type" = "application/json"
+      "Content-Type"             = "application/json"
       "x-port-aws-ocean-api-key" = var.api_key_param
     }
   }
@@ -84,8 +84,8 @@ EOF
 }
 
 resource "aws_cloudwatch_event_rule" "cloudformation_status_event_bridge_rule" {
-  name           = "port-aws-ocean-sync-cloudformation-status-change-trails"
-  description    = "Capture CloudFormation status change events"
+  name        = "port-aws-ocean-sync-cloudformation-status-change-trails"
+  description = "Capture CloudFormation status change events"
   event_pattern = jsonencode({
     source      = ["aws.cloudformation"]
     detail-type = ["CloudFormation Stack Status Change"]
@@ -93,12 +93,12 @@ resource "aws_cloudwatch_event_rule" "cloudformation_status_event_bridge_rule" {
 }
 
 resource "aws_cloudwatch_event_target" "cloudformation_status_event_bridge_target" {
-  rule           = aws_cloudwatch_event_rule.cloudformation_status_event_bridge_rule.name
-  arn            = var.target_arn
+  rule = aws_cloudwatch_event_rule.cloudformation_status_event_bridge_rule.name
+  arn  = var.target_arn
 
   http_target {
     header_parameters = {
-      "Content-Type" = "application/json"
+      "Content-Type"             = "application/json"
       "x-port-aws-ocean-api-key" = var.api_key_param
     }
   }
@@ -123,25 +123,25 @@ EOF
 
 # EC2
 resource "aws_cloudwatch_event_rule" "ec2_instance_tags_event_rule" {
-  name           = "port-aws-ocean-sync-ec2-tags-trails"
-  description    = "Capture EC2 instance tag events"
+  name        = "port-aws-ocean-sync-ec2-tags-trails"
+  description = "Capture EC2 instance tag events"
   event_pattern = jsonencode({
     source      = ["aws.ec2"]
     detail-type = ["AWS API Call via CloudTrail"]
     detail = {
       eventSource = ["ec2.amazonaws.com"]
-      eventName   = [{prefix: "DeleteTags"}, {prefix: "CreateTags"}]
+      eventName   = [{ prefix : "DeleteTags" }, { prefix : "CreateTags" }]
     }
   })
 }
 
 resource "aws_cloudwatch_event_target" "ec2_instance_tags_event_target" {
-  rule           = aws_cloudwatch_event_rule.ec2_instance_tags_event_rule.name
-  arn            = var.target_arn
-  
+  rule = aws_cloudwatch_event_rule.ec2_instance_tags_event_rule.name
+  arn  = var.target_arn
+
   http_target {
     header_parameters = {
-      "Content-Type" = "application/json"
+      "Content-Type"             = "application/json"
       "x-port-aws-ocean-api-key" = var.api_key_param
     }
   }
@@ -166,8 +166,8 @@ EOF
 }
 
 resource "aws_cloudwatch_event_rule" "ec2_instance_status_change_event_rule" {
-  name           = "port-aws-exporter-sync-ec2-instance-status-change-trails"
-  description    = "Capture EC2 instance status change events"
+  name        = "port-aws-exporter-sync-ec2-instance-status-change-trails"
+  description = "Capture EC2 instance status change events"
   event_pattern = jsonencode({
     source      = ["aws.ec2"]
     detail-type = ["EC2 Instance State-change Notification"]
@@ -175,12 +175,12 @@ resource "aws_cloudwatch_event_rule" "ec2_instance_status_change_event_rule" {
 }
 
 resource "aws_cloudwatch_event_target" "ec2_instance_status_change_event_target" {
-  rule           = aws_cloudwatch_event_rule.ec2_instance_status_change_event_rule.name
-  arn            = var.target_arn
-  
+  rule = aws_cloudwatch_event_rule.ec2_instance_status_change_event_rule.name
+  arn  = var.target_arn
+
   http_target {
     header_parameters = {
-      "Content-Type" = "application/json"
+      "Content-Type"             = "application/json"
       "x-port-aws-ocean-api-key" = var.api_key_param
     }
   }
