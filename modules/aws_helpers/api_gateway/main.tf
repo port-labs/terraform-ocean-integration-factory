@@ -6,7 +6,7 @@ resource "aws_api_gateway_rest_api" "rest_api" {
 resource "aws_api_gateway_stage" "production" {
   stage_name    = "production"
   rest_api_id   = aws_api_gateway_rest_api.rest_api.id
-  deployment_id = aws_api_gateway_deployment.my_deployment.id
+  deployment_id = aws_api_gateway_deployment.port_ocean_exporter_gateway_deployment.id
 }
 
 resource "aws_api_gateway_resource" "docs" {
@@ -103,11 +103,7 @@ resource "aws_api_gateway_method_response" "post_webhook_200" {
   }
 }
 
-resource "aws_api_gateway_deployment" "my_deployment" {
-  depends_on = [
-    aws_api_gateway_integration.get_docs_integration,
-    aws_api_gateway_integration.post_webhook_integration,
-  ]
+resource "aws_api_gateway_deployment" "port_ocean_exporter_gateway_deployment" {
   rest_api_id = aws_api_gateway_rest_api.rest_api.id
 
   lifecycle {
