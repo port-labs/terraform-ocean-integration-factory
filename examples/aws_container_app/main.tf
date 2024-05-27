@@ -1,8 +1,3 @@
-provider "aws" {
-  profile = "port-admin"
-  region  = "eu-west-1"
-}
-
 locals {
   security_groups = concat(
     var.additional_security_groups,
