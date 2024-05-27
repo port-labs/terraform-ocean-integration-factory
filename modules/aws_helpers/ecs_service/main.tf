@@ -235,7 +235,7 @@ resource "aws_ecs_service" "ecs_service" {
 
   network_configuration {
     assign_public_ip = var.assign_public_ip
-    security_groups  = var.additional_security_groups
+    security_groups  = var.ecs_service_security_groups
     subnets          = var.subnets
   }
   platform_version    = "LATEST"

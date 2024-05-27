@@ -42,7 +42,7 @@ variable "network_mode" {
   description = "The network mode to use for the container"
 }
 
-variable "additional_security_groups" {
+variable "ecs_service_security_groups" {
   type        = list(string)
   default     = []
   description = "Additional security groups to attach to the ECS service"

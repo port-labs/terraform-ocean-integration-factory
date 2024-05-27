@@ -1,5 +1,6 @@
 locals {
-  security_groups = concat(
+  # This is used for the ecs_service to be able to receive traffic from the load balancer
+  ec2_service_security_groups = concat(
     var.additional_security_groups,
     var.allow_incoming_requests ? module.port_ocean_ecs_lb[0].security_groups : []
   )
@@ -22,7 +23,7 @@ module "port_ocean_ecs" {
 
 
   lb_targ_group_arn          = var.allow_incoming_requests ? module.port_ocean_ecs_lb[0].target_group_arn : ""
-  additional_security_groups = local.security_groups
+  ecs_service_security_groups = local.ec2_service_security_groups
 
   image_registry = var.image_registry
 
