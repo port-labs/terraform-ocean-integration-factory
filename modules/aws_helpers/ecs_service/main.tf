@@ -67,7 +67,7 @@ data "aws_iam_policy_document" "task_role_account_list_regions_policy" {
       "account:ListRegions"
     ]
 
-    resources = ["*"]
+    resources = var.account_list_regions_resources_policy
   }
 }
 resource "aws_iam_policy" "task_role_account_list_regions_policy" {
@@ -114,16 +114,6 @@ data "aws_iam_policy_document" "task_execution_role_policy" {
 
     resources = [
       "${aws_cloudwatch_log_group.log_group.arn}:*"
-    ]
-  }
-
-  statement {
-    actions = [
-      "ecr:GetAuthorizationToken",
-    ]
-
-    resources = [
-      "*"
     ]
   }
 }

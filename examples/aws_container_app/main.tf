@@ -20,6 +20,7 @@ module "port_ocean_ecs" {
 
   subnets      = var.subnets
   cluster_name = var.cluster_name
+  account_list_regions_resources_policy = var.account_list_regions_resources_policy
 
 
   lb_target_group_arn         = var.allow_incoming_requests ? module.port_ocean_ecs_lb[0].target_group_arn : ""

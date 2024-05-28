@@ -134,3 +134,9 @@ variable "allow_incoming_requests" {
   default     = true
   description = "Whether to allow incoming requests to the ECS service"
 }
+
+variable "account_list_regions_resources_policy" {
+  type = list(string)
+  default = [ "*" ]
+  description = "The resources to allow the task role to list regions"
+}

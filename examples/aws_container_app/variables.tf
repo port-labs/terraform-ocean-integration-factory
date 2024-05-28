@@ -185,3 +185,9 @@ variable "allow_incoming_requests" {
   default     = true
   description = "Whether to allow incoming requests for live events"
 }
+
+variable "account_list_regions_resources_policy" {
+  type = list(string)
+  default = [ "*" ]
+  description = "The resources to allow the task role to list regions"
+}
