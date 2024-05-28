@@ -23,8 +23,8 @@ module "port_ocean_ecs_lb" {
 module "port_ocean_ecs" {
   source = "../../modules/aws_helpers/ecs_service"
 
-  subnets      = var.subnets
-  cluster_name = var.cluster_name
+  subnets                               = var.subnets
+  cluster_name                          = var.cluster_name
   account_list_regions_resources_policy = var.account_list_regions_resources_policy
 
 
@@ -66,23 +66,31 @@ module "api_gateway" {
 #   target_arn    = var.allow_incoming_requests ? module.api_gateway[0].integration_webhook_api_arn : ""
 # }
 
-module "event" {
-  source = "../../modules/aws_helpers/event"
+# module "event" {
+#   source = "../../modules/aws_helpers/event"
 
 
-  name                 = "port-aws-ocean-sync-s3-trails"
-  description          = "Capture S3 events"
-  event_pattern_source = ["aws.s3"]
-  detail_type          = ["AWS API Call via CloudTrail"]
-  event_source         = ["s3.amazonaws.com"]
-  event_name           = [{ prefix : "CreateBucket" }, { prefix : "PutBucket" }, { prefix : "DeleteBucket" }]
-  input_paths = {
-    account_id = "$.detail.userIdentity.accountId"
-    aws_region = "$.detail.awsRegion"
-    event_name = "$.detail.eventName"
-    identifier = "$.detail.requestParameters.bucketName"
-    resource_type = "AWS::S3::Bucket"
-  }
+#   name                 = "port-aws-ocean-sync-s3-trails"
+#   description          = "Capture S3 events"
+#   event_pattern_source = ["aws.s3"]
+#   detail_type          = ["AWS API Call via CloudTrail"]
+#   event_source         = ["s3.amazonaws.com"]
+#   event_name           = [{ prefix : "CreateBucket" }, { prefix : "PutBucket" }, { prefix : "DeleteBucket" }]
+#   input_paths = {
+#     account_id = "$.detail.userIdentity.accountId"
+#     aws_region = "$.detail.awsRegion"
+#     event_name = "$.detail.eventName"
+#     identifier = "$.detail.requestParameters.bucketName"
+#     resource_type = "AWS::S3::Bucket"
+#   }
+#   api_key_param = var.integration.config.live_events_api_key
+#   target_arn    = var.allow_incoming_requests ? module.api_gateway[0].integration_webhook_api_arn : ""
+# }
+
+module "events" {
+  source = "../../modules/aws_helpers/default_events"
+  count  = var.allow_incoming_requests ? 1 : 0
+
   api_key_param = var.integration.config.live_events_api_key
   target_arn    = var.allow_incoming_requests ? module.api_gateway[0].integration_webhook_api_arn : ""
 }

@@ -1,14 +1,7 @@
 resource "aws_cloudwatch_event_rule" "port_ocean_live_events_rule" {
-  name        = var.name
-  description = var.description
-  event_pattern = jsonencode({
-    source      = var.event_pattern_source
-    detail-type = var.detail_type
-    detail = {
-      eventSource = var.event_source
-      eventName   = var.event_name
-    }
-  })
+  name          = var.name
+  description   = var.description
+  event_pattern = jsonencode(var.event_pattern)
 }
 
 resource "aws_cloudwatch_event_target" "port_ocean_event_bridge_target" {
@@ -30,7 +23,7 @@ resource "aws_cloudwatch_event_target" "port_ocean_event_bridge_target" {
     }
     input_template = <<EOF
 {
-  "resource_type": ${var.input_paths.resource_type},
+  "resource_type": "${var.input_paths.resource_type}",
   "accountId": "<accountId>",
   "awsRegion": "<awsRegion>",
   "eventName": "<eventName>",

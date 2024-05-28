@@ -8,31 +8,12 @@ variable "description" {
   description = "The description of the event"
 }
 
-variable "event_pattern_source" {
-  type        = list(string)
-  description = "The source of the event"
-  default     = []
-}
-
-variable "detail_type" {
-  type        = list(string)
-  description = "The detail type of the event"
-  default     = []
-}
-
-variable "event_source" {
-  type        = list(string)
-  description = "The event source"
-  default     = []
-}
-
-variable "event_name" {
-  type        = list(object({
-    name = optional(string)
-    prefix = optional(string)
-  }))
-  description = "The event name"
-  default     = []
+variable "event_pattern" {
+  type = object({
+    source      = list(string)
+    detail-type = list(string)
+    detail      = optional(any)
+  })
 }
 
 variable "input_paths" {
