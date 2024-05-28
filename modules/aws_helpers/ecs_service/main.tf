@@ -10,10 +10,6 @@ locals {
 
   env = [
     {
-      name  = "OCEAN__PORT__BASE_URL"
-      value = "https://7cctltw12j22.share.zrok.io"
-    },
-    {
       name  = "OCEAN__INITIALIZE_PORT_RESOURCES",
       value = var.initialize_port_resources ? "true" : "false"
     },
