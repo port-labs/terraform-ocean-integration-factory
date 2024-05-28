@@ -189,5 +189,5 @@ variable "allow_incoming_requests" {
 variable "account_list_regions_resources_policy" {
   type        = list(string)
   default     = ["*"]
-  description = "The resources to allow the task role to list regions"
+  description = "The resources to allow the task role to list regions, check out https://docs.aws.amazon.com/accounts/latest/reference/API_ListRegions.html for more information"
 }
