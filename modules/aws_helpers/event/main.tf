@@ -1,7 +1,16 @@
+locals {
+  # This is used in order to omit some of the properties that are not needed in the event pattern
+  event_pattern_processed = {
+    for event_pattern_key, event_pattern_value in var.event_pattern :
+    event_pattern_key => event_pattern_value if event_pattern_value != null
+  }
+}
+
+
 resource "aws_cloudwatch_event_rule" "port_ocean_live_events_rule" {
   name          = var.name
   description   = var.description
-  event_pattern = jsonencode(var.event_pattern)
+  event_pattern = jsonencode(local.event_pattern_processed)
 }
 
 resource "aws_cloudwatch_event_target" "port_ocean_event_bridge_target" {
