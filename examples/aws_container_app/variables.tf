@@ -160,7 +160,7 @@ variable "initialize_port_resources" {
 variable "integration" {
   type = object({
     identifier = optional(string)
-    type       = string
+    type       = optional(string, "aws")
     config     = map(any)
   })
   description = "The integration configuration"

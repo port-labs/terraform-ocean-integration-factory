@@ -24,17 +24,13 @@ module "aws_integration" {
   source = "./path-to-your-module"
 
   subnets             = ["subnet-1", "subnet-2", "subnet-3"]
-  integration_version = "0.1.0"
   port = {
     client_id     = "<client-id>"
     client_secret = "<client-secret>"
   }
   integration = {
     identifier = "my-aws-integration"
-    type       = "aws"
     config = {
-      aws_access_key_id      = "<custom-user-access-key>"
-      aws_secret_access_key  = "<custom-user-secret>"
       live_events_api_key = "<your-api-key>"
       organization_role_arn  = "arn:.../organization-role"
       account_read_role_name = "ocean-integration-role"
@@ -51,13 +47,9 @@ module "aws_integration" {
 ### Variables Explanation
 
 - `subnets`: List of subnet IDs where the ECS tasks will run.
-- `integration_version`: The version of the integration being deployed.
 - `port.client_id`: The client ID for the Port integration.
 - `port.client_secret`: The client secret for the Port integration.
 - `integration.identifier`: The identifier for the integration.
-- `integration.type`: The type of integration. In this case, it is `aws`.
-- `integration.config.aws_access_key_id` (optional): AWS access key ID used for authenticating with the AWS API.
-- `integration.config.aws_secret_access_key` (optional): AWS secret access key used for authenticating with the AWS API.
 - `integration.config.live_events_api_key`: API key used to authenticate with the live events API.
 - `integration.config.organization_role_arn` (optional): ARN of the role used to assume the organization role.
 - `integration.config.account_read_role_name` (optional): Name of the role used to assume the read role in the account.
