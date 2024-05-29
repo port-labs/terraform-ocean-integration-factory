@@ -20,6 +20,7 @@ module "port_ocean_ecs" {
 
   subnets                               = var.subnets
   cluster_name                          = var.cluster_name
+  existing_cluster_arn                  = var.existing_cluster_arn
   account_list_regions_resources_policy = var.account_list_regions_resources_policy
 
 

@@ -99,6 +99,12 @@ variable "ecs_use_fargate" {
   description = "Whether to use Fargate or EC2"
 }
 
+variable "existing_cluster_arn" {
+  type        = string
+  default     = ""
+  description = "The ARN of an existing ECS cluster"
+}
+
 variable "cluster_name" {
   type        = string
   default     = "port-ocean-aws-integration-cluster"
@@ -161,11 +167,11 @@ variable "integration" {
   type = object({
     identifier = optional(string)
     type       = optional(string, "aws")
-    config     = object({
-      aws_access_key_id = optional(string)
-      aws_secret_access_key = optional(string)
-      live_events_api_key = optional(string)
-      organization_role_arn = optional(string)
+    config = object({
+      aws_access_key_id      = optional(string)
+      aws_secret_access_key  = optional(string)
+      live_events_api_key    = optional(string)
+      organization_role_arn  = optional(string)
       account_read_role_name = optional(string)
     })
   })

@@ -39,7 +39,7 @@ data "aws_region" "current" {}
 resource "aws_ssm_parameter" "ocean_port_integration_config" {
   name  = "ocean.${var.integration.type}.${var.integration.identifier}.integration_config"
   type  = "SecureString"
-  value = jsonencode({for key, value in var.integration.config : key => value if value != null})
+  value = jsonencode({ for key, value in var.integration.config : key => value if value != null })
 }
 
 resource "aws_ssm_parameter" "ocean_port_credentials" {
@@ -191,11 +191,12 @@ resource "aws_ecs_task_definition" "service_task_definition" {
 }
 
 resource "aws_ecs_cluster" "port_ocean_aws_integration_cluster" {
-  name = var.cluster_name
+  name  = var.cluster_name
+  count = var.existing_cluster_arn == "" ? 1 : 0
 }
 
 resource "aws_ecs_service" "ecs_service" {
-  cluster = aws_ecs_cluster.port_ocean_aws_integration_cluster.id
+  cluster = var.existing_cluster_arn != "" ? var.existing_cluster_arn : aws_ecs_cluster.port_ocean_aws_integration_cluster[0].id
 
   deployment_circuit_breaker {
     enable   = "true"
