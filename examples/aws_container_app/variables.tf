@@ -161,7 +161,13 @@ variable "integration" {
   type = object({
     identifier = optional(string)
     type       = optional(string, "aws")
-    config     = map(any)
+    config     = object({
+      aws_access_key_id = optional(string)
+      aws_secret_access_key = optional(string)
+      live_events_api_key = optional(string)
+      organization_role_arn = optional(string)
+      account_read_role_name = optional(string)
+    })
   })
   description = "The integration configuration"
 }

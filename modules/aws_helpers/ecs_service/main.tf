@@ -20,13 +20,27 @@ locals {
       })
     },
     {
-      name  = "OCEAN__INTEGRATION"
-      value = jsonencode(var.integration)
+      name  = "OCEAN__INTEGRATION_IDENTIFIER"
+      value = var.integration.identifier
+    },
+    {
+      name  = "OCEAN__INTEGRATION_TYPE"
+      value = var.integration.type
+    },
+    {
+      name  = "OCEAN__INTEGRATION_CONFIG"
+      value = aws_ssm_parameter.ocean_port_integration_config.name
     }
   ]
 }
 
 data "aws_region" "current" {}
+
+resource "aws_ssm_parameter" "ocean_port_integration_config" {
+  name  = "ocean.${var.integration.type}.${var.integration.identifier}.integration_config"
+  type  = "SecureString"
+  value = jsonencode({for key, value in var.integration.config : key => value if value != null})
+}
 
 resource "aws_ssm_parameter" "ocean_port_credentials" {
   name  = "ocean.${var.integration.type}.${var.integration.identifier}.port_credentials"
