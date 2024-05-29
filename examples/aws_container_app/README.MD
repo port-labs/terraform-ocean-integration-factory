@@ -45,7 +45,7 @@ module "aws_integration" {
 - `port.client_id`: The client ID for the Port integration.
 - `port.client_secret`: The client secret for the Port integration.
 - `integration.identifier`: The identifier for the integration.
-- `integration.config.live_events_api_key`: API key used to authenticate with the live events API.
+- `integration.config.live_events_api_key`: A user-defined API key for authenticating with the live events API, for example "my-secret".
 - `integration.config.organization_role_arn` (optional): ARN of the role used to assume the organization role.
 - `integration.config.account_read_role_name` (optional): Name of the role used to assume the read role in the account.
 - `cluster_name` (optional): Name of the ECS cluster.
