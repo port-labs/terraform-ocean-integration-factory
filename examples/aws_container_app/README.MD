@@ -16,7 +16,8 @@ Create a `main.tf` file in your Terraform project and include the following code
 
 ```hcl
 module "aws_integration" {
-  source = "./path-to-your-module"
+  source = "port-labs/integration-factory/ocean/examples/aws_container_app"
+  version = ">=0.0.24"
 
   port = {
     client_id     = "<client-id>"
