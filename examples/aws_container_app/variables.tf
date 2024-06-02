@@ -29,6 +29,7 @@ variable "certificate_domain_name" {
 variable "additional_secrets" {
   type        = map(string)
   description = "Additional secrets to pass to the container"
+  default     = {}
 }
 
 variable "subnets" {
