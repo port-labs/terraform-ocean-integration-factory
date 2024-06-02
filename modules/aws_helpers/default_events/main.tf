@@ -28,31 +28,6 @@ module "s3_event" {
   target_arn    = var.target_arn
 }
 
-# CloudFormation
-module "cloudformation_event" {
-  source = "../event"
-
-  name        = "${local.prefix}-cloudformation-trails"
-  description = "Capture CloudFormation events"
-  event_pattern = {
-    source      = ["aws.cloudformation"]
-    detail-type = ["AWS API Call via CloudTrail"]
-    detail = {
-      eventSource = ["cloudformation.amazonaws.com"]
-      eventName   = [{ prefix : "CreateStack" }, { prefix : "UpdateStack" }, { prefix : "DeleteStack" }]
-    }
-  }
-  input_paths = {
-    resource_type = "AWS::CloudFormation::Stack"
-    account_id    = "$.detail.userIdentity.accountId"
-    aws_region    = "$.detail.awsRegion"
-    event_name    = "$.detail.eventName"
-    identifier    = "$.detail.requestParameters.stackName"
-  }
-
-  api_key_param = var.api_key_param
-  target_arn    = var.target_arn
-}
 
 module "cloudformation_status_event" {
   source = "../event"
