@@ -1,10 +1,14 @@
 locals {
   service_name  = "port-ocean-${var.integration.type}-${var.integration.identifier}"
   awslogs_group = var.logs_cloudwatch_group == "" ? "/ecs/${local.service_name}" : var.logs_cloudwatch_group
-  port_credentials = [
+  secrets = [
     {
       name      = "OCEAN__PORT"
       valueFrom = aws_ssm_parameter.ocean_port_credentials.name
+    },
+    {
+      name      = "OCEAN__INTEGRATION"
+      valueFrom = aws_ssm_parameter.ocean_port_integration.name
     }
   ]
 
@@ -18,28 +22,20 @@ locals {
       value = jsonencode({
         for key, value in var.event_listener : key => value if value != null
       })
-    },
-    {
-      name  = "OCEAN__INTEGRATION_IDENTIFIER"
-      value = var.integration.identifier
-    },
-    {
-      name  = "OCEAN__INTEGRATION_TYPE"
-      value = var.integration.type
-    },
-    {
-      name  = "OCEAN__INTEGRATION_CONFIG"
-      value = aws_ssm_parameter.ocean_port_integration_config.name
     }
   ]
 }
 
 data "aws_region" "current" {}
 
-resource "aws_ssm_parameter" "ocean_port_integration_config" {
-  name  = "ocean.${var.integration.type}.${var.integration.identifier}.integration_config"
-  type  = "SecureString"
-  value = jsonencode({ for key, value in var.integration.config : key => value if value != null })
+resource "aws_ssm_parameter" "ocean_port_integration" {
+  name = "ocean.${var.integration.type}.${var.integration.identifier}.integration_config"
+  type = "SecureString"
+  value = jsonencode({
+    identifier = var.integration.identifier
+    type       = var.integration.type
+    config     = { for key, value in var.integration.config : key => value if value != null }
+  })
 }
 
 resource "aws_ssm_parameter" "ocean_port_credentials" {
@@ -117,7 +113,7 @@ data "aws_iam_policy_document" "task_execution_role_policy" {
       "ssm:GetParameters"
     ]
 
-    resources = [aws_ssm_parameter.ocean_port_credentials.arn]
+    resources = [aws_ssm_parameter.ocean_port_credentials.arn, aws_ssm_parameter.ocean_port_integration.arn]
   }
 
   statement {
@@ -169,7 +165,7 @@ resource "aws_ecs_task_definition" "service_task_definition" {
         name        = local.service_name,
         networkMode = var.network_mode,
         environment = local.env,
-        secrets     = local.port_credentials
+        secrets     = local.secrets
         logConfiguration = {
           logDriver = "awslogs",
           options = {
