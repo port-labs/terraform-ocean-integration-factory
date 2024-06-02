@@ -50,7 +50,7 @@ module "aws_integration" {
 - `integration.config.organization_role_arn` (optional): ARN of the role used to assume the organization role.
 - `integration.config.account_read_role_name` (optional): Name of the role used to assume the read role in the account.
 - `cluster_name` (optional): Name of the ECS cluster.
-- `vpc_id` (optional): VPC ID where the cluster will be created.
+- `vpc_id`: VPC ID where the cluster will be created.
 - `initialize_port_resources`: Boolean to initialize Port resources.
 - `create_default_sg`: Boolean to create a default security group.
 - `allow_incoming_requests`: Boolean to allow incoming requests to the ECS tasks.
