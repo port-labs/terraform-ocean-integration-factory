@@ -29,10 +29,7 @@ module "port_ocean_ecs" {
 
   image_registry = var.image_registry
 
-  port = {
-    client_id     = var.port.client_id
-    client_secret = var.port.client_secret
-  }
+  port = var.port
 
   integration_version       = var.integration_version
   initialize_port_resources = var.initialize_port_resources

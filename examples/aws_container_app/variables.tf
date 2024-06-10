@@ -122,6 +122,7 @@ variable "port" {
   type = object({
     client_id     = string
     client_secret = string
+    base_url      = optional(string)
   })
   description = "The port credentials"
 }
