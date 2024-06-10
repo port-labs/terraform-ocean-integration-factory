@@ -41,7 +41,7 @@ resource "aws_ssm_parameter" "ocean_port_integration" {
 resource "aws_ssm_parameter" "ocean_port_credentials" {
   name  = "ocean.${var.integration.type}.${var.integration.identifier}.port_credentials"
   type  = "SecureString"
-  value = jsonencode(var.port)
+  value = jsonencode({ for key, value in var.port : key => value if value != null })
 }
 
 resource "aws_cloudwatch_log_group" "log_group" {
