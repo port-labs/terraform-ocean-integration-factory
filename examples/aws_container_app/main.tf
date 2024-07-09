@@ -23,6 +23,7 @@ module "port_ocean_ecs" {
   existing_cluster_arn                  = var.existing_cluster_arn
   account_list_regions_resources_policy = var.account_list_regions_resources_policy
   vpc_id = var.vpc_id
+  create_default_sg = var.create_default_sg
 
 
   lb_target_group_arn         = var.allow_incoming_requests ? module.port_ocean_ecs_lb[0].target_group_arn : ""
