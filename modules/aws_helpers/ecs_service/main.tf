@@ -1,6 +1,8 @@
 locals {
   service_name  = "port-ocean-${var.integration.type}-${var.integration.identifier}"
   awslogs_group = var.logs_cloudwatch_group == "" ? "/ecs/${local.service_name}" : var.logs_cloudwatch_group
+  should_create_default_sg = length(var.ecs_service_security_groups) == 0 && var.create_default_sg
+
   secrets = [
     {
       name      = "OCEAN__PORT"
@@ -27,6 +29,35 @@ locals {
 }
 
 data "aws_region" "current" {}
+
+resource "aws_security_group" "ecs_service_default_sg" {
+  count = local.should_create_default_sg ? 1 : 0
+  name        = "ecs_service_sg"
+  description = "Security group for ECS service"
+  vpc_id      = var.vpc_id
+
+  dynamic "ingress" {
+    for_each = [80, 8000]
+    content {
+      description      = "TLS from VPC"
+      from_port        = ingress.value
+      to_port          = ingress.value
+      protocol         = "tcp"
+      cidr_blocks      = ["0.0.0.0/0"]
+      ipv6_cidr_blocks = ["::/0"]
+    }
+  }
+  dynamic "egress" {
+    for_each = [443, 9196]
+    content {
+      from_port        = egress.value
+      to_port          = egress.value
+      protocol         = "tcp"
+      cidr_blocks      = ["0.0.0.0/0"]
+      ipv6_cidr_blocks = ["::/0"]
+    }
+  }
+}
 
 resource "aws_ssm_parameter" "ocean_port_integration" {
   name = "ocean.${var.integration.type}.${var.integration.identifier}.integration_config"
@@ -224,7 +255,7 @@ resource "aws_ecs_service" "ecs_service" {
 
   network_configuration {
     assign_public_ip = var.assign_public_ip
-    security_groups  = var.ecs_service_security_groups
+    security_groups  = local.should_create_default_sg ? [aws_security_group.ecs_service_default_sg[0].id] : var.ecs_service_security_groups
     subnets          = var.subnets
   }
   platform_version    = "LATEST"
