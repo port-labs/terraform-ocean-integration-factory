@@ -1,3 +1,14 @@
+variable "vpc_id" {
+  type        = string
+  description = "The LB VPC ID"
+}
+
+variable "create_default_sg" {
+  type        = bool
+  default     = true
+  description = "Whether to create a default security group"
+}
+
 variable "image_registry" {
   type        = string
   default     = "ghcr.io/port-labs"
