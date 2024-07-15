@@ -21,9 +21,9 @@ locals {
     {
       name = upper("OCEAN__INTEGRATION")
       value = jsonencode({
-        "identifier": var.integration_identifier,
-        "type": var.integration_type,
-        "config": {}
+        "identifier" : var.integration_identifier,
+        "type" : var.integration_type,
+        "config" : {}
       })
     }
   ]
@@ -62,6 +62,7 @@ module "port_ocean_authorization" {
   organization       = var.gcp_organization
   project            = var.gcp_ocean_setup_project
   projects           = var.gcp_projects
+  excluded_projects  = var.gcp_excluded_projects
 }
 module "port_ocean_pubsub" {
   source                     = "../../modules/gcp_helpers/pubsub"

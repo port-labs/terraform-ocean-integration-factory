@@ -21,6 +21,11 @@ variable "gcp_projects" {
   description = "The Projects list you want the integration to collect from"
   default     = []
 }
+variable "gcp_excluded_projects" {
+  type        = list(string)
+  description = "The Projects list you want the integration NOT to collect from"
+  default     = []
+}
 variable "assets_types_for_monitoring" {
   type    = list(string)
   default = null
@@ -55,8 +60,8 @@ variable "environment_variables" {
   default = null
 }
 variable "initialize_port_resources" {
-  type    = bool
-  default = true
+  type        = bool
+  default     = true
   description = "If true, the module will create the port resources required for the integration"
 }
 variable "event_listener" {
@@ -86,18 +91,18 @@ variable "event_listener" {
 }
 
 variable "integration_identifier" {
-    type = string
-    description = "The identifier of the integration"
+  type        = string
+  description = "The identifier of the integration"
 }
 
 variable "integration_version" {
-  type    = string
-  default = "latest"
+  type        = string
+  default     = "latest"
   description = "The version of the integration to deploy"
 }
 
 variable "integration_type" {
-    type = string
-    description = "The type of the integration"
-    default = "gcp"
+  type        = string
+  description = "The type of the integration"
+  default     = "gcp"
 }
