@@ -26,3 +26,8 @@ variable "projects" {
   type    = list(string)
   default = []
 }
+
+variable "excluded_projects" {
+  type    = list(string)
+  default = []
+}
