@@ -1,5 +1,17 @@
+data "google_projects" "all" {
+  filter = "parent.id=${var.organization}"
+}
+
+locals {
+  has_specific_projects = length(var.projects) > 0
+  has_excluded_projects = length(var.excluded_projects) > 0
+  filtered_projects     = local.has_excluded_projects ? [for project in data.google_projects.all.projects : project.project_id if !contains(var.excluded_projects, project.project_id)] : []
+
+  included_projects = local.has_specific_projects ? var.projects : (local.has_excluded_projects ? local.filtered_projects : [])
+}
+
 resource "google_cloud_asset_organization_feed" "ocean_integration_assets_feed" {
-  count           = length(var.projects) == 0 ? 1 : 0
+  count           = length(local.included_projects) == 0 ? 1 : 0
   billing_project = var.billing_project
   feed_id         = var.assets_feed_id
   org_id          = var.organization
@@ -15,8 +27,8 @@ resource "google_cloud_asset_organization_feed" "ocean_integration_assets_feed" 
 }
 
 resource "google_cloud_asset_project_feed" "ocean_integration_per_project_feed" {
-  count           = length(var.projects)
-  project         = var.projects[count.index]
+  count           = length(local.included_projects)
+  project         = local.included_projects[count.index]
   billing_project = var.billing_project
   feed_id         = var.assets_feed_id
   content_type    = "RESOURCE"
