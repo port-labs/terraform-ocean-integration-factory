@@ -1,6 +1,6 @@
 locals {
-  service_name  = "port-ocean-${var.integration.type}-${var.integration.identifier}"
-  awslogs_group = var.logs_cloudwatch_group == "" ? "/ecs/${local.service_name}" : var.logs_cloudwatch_group
+  service_name             = "port-ocean-${var.integration.type}-${var.integration.identifier}"
+  awslogs_group            = var.logs_cloudwatch_group == "" ? "/ecs/${local.service_name}" : var.logs_cloudwatch_group
   should_create_default_sg = length(var.ecs_service_security_groups) == 0 && var.create_default_sg
 
   secrets = [
@@ -31,7 +31,7 @@ locals {
 data "aws_region" "current" {}
 
 resource "aws_security_group" "ecs_service_default_sg" {
-  count = local.should_create_default_sg ? 1 : 0
+  count       = local.should_create_default_sg ? 1 : 0
   name        = "ecs_service_sg"
   description = "Security group for ECS service"
   vpc_id      = var.vpc_id
@@ -102,7 +102,16 @@ data "aws_iam_policy_document" "ecs_assume_role_policy" {
 }
 
 
-data "aws_iam_policy_document" "task_role_account_list_regions_policy" {
+data "aws_iam_policy_document" "task_role_account_base_policy" {
+  dynamic "statement" {
+    for_each = var.additional_task_policy_statements
+
+    content {
+      actions   = statement.value.actions
+      resources = statement.value.resources
+    }
+  }
+
   statement {
     actions = [
       "account:ListRegions"
@@ -111,9 +120,9 @@ data "aws_iam_policy_document" "task_role_account_list_regions_policy" {
     resources = var.account_list_regions_resources_policy
   }
 }
-resource "aws_iam_policy" "task_role_account_list_regions_policy" {
+resource "aws_iam_policy" "task_role_account_base_policy" {
   name   = "ecs-task-role-policy-${local.service_name}"
-  policy = data.aws_iam_policy_document.task_role_account_list_regions_policy.json
+  policy = data.aws_iam_policy_document.task_role_account_base_policy.json
 }
 resource "aws_iam_role" "task_role" {
   name               = "ecs-task-role-${local.service_name}"
@@ -123,15 +132,15 @@ resource "aws_iam_role_policy_attachment" "task_role_readonly_policy_attachment"
   role       = aws_iam_role.task_role.name
   policy_arn = "arn:aws:iam::aws:policy/ReadOnlyAccess"
 }
-resource "aws_iam_role_policy_attachment" "task_role_account_list_regions_policy_attachment" {
+resource "aws_iam_role_policy_attachment" "task_role_account_base_policy_attachment" {
   role       = aws_iam_role.task_role.name
-  policy_arn = aws_iam_policy.task_role_account_list_regions_policy.arn
+  policy_arn = aws_iam_policy.task_role_account_base_policy.arn
 }
 
 
 data "aws_iam_policy_document" "task_execution_role_policy" {
   dynamic "statement" {
-    for_each = var.additional_policy_statements
+    for_each = var.additional_task_execution_policy_statements
 
     content {
       actions   = statement.value.actions
