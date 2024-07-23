@@ -40,6 +40,46 @@ module "aws_integration" {
 }
 ```
 
+## Multi-Account Setup
+
+When setting up the integration in a multi-account environment, you can specify additional IAM policy statements to attach to the task role. This is useful when you need to assume roles in other accounts to access resources.
+
+```hcl
+module "aws_integration" {
+  source = "port-labs/integration-factory/ocean/examples/aws_container_app"
+  version = ">=0.0.24"
+
+  port = {
+    client_id     = "<client-id>"
+    client_secret = "<client-secret>"
+  }
+  integration = {
+    identifier = "my-aws-integration"
+    config = {
+      live_events_api_key = "<your-api-key>"
+      organization_role_arn  = "arn:.../organization-role"
+      account_read_role_name = "ocean-integration-role"
+    }
+  }
+  initialize_port_resources = true
+  allow_incoming_requests   = true
+  create_default_sg         = false
+  subnets                   = ["subnet-1", "subnet-2", "subnet-3"]
+  vpc_id                    = "vpc-1"
+  cluster_name              = "port-ocean-aws-exporter"
+
+  additional_task_policy_statements = [{
+    actions = ["sts:AssumeRole"]
+    resources = [
+      "arn:aws:iam::<root-account>:role/RootRole",
+      "arn:aws:iam::<member-account-1>:role/MemberRole",
+      "arn:aws:iam::<member-account-2>:role/MemberRole",
+      ...
+    ]
+}]
+}
+```
+
 ### Variables Explanation
 
 - `subnets`: List of subnet IDs where the ECS tasks will run.
@@ -54,6 +94,7 @@ module "aws_integration" {
 - `initialize_port_resources`: Boolean to initialize Port resources.
 - `create_default_sg`: Boolean to create a default security group.
 - `allow_incoming_requests`: Boolean to allow incoming requests to the ECS tasks.
+- `additional_task_policy_statements`: Additional IAM policy statements to attach to the task role.
 
 ### custom event creation
 
