@@ -18,12 +18,14 @@ module "port_ocean_ecs_lb" {
 module "port_ocean_ecs" {
   source = "../../modules/aws_helpers/ecs_service"
 
-  subnets                               = var.subnets
-  cluster_name                          = var.cluster_name
-  existing_cluster_arn                  = var.existing_cluster_arn
-  account_list_regions_resources_policy = var.account_list_regions_resources_policy
-  vpc_id = var.vpc_id
-  create_default_sg = var.create_default_sg
+  subnets                                     = var.subnets
+  cluster_name                                = var.cluster_name
+  existing_cluster_arn                        = var.existing_cluster_arn
+  account_list_regions_resources_policy       = var.account_list_regions_resources_policy
+  vpc_id                                      = var.vpc_id
+  create_default_sg                           = var.create_default_sg
+  additional_task_execution_policy_statements = var.additional_task_execution_policy_statements
+  additional_task_policy_statements           = var.additional_task_policy_statements
 
 
   lb_target_group_arn         = var.allow_incoming_requests ? module.port_ocean_ecs_lb[0].target_group_arn : ""

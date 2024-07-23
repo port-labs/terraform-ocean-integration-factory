@@ -144,13 +144,22 @@ variable "lb_target_group_arn" {
   default     = ""
   description = "The ARN of the target group to attach to the ECS service"
 }
-variable "additional_policy_statements" {
+variable "additional_task_execution_policy_statements" {
   type = list(object({
     actions   = list(string)
     resources = list(string)
   }))
   default     = []
-  description = "Additional policy statements to attach to the ECS service"
+  description = "Additional policy statements to attach to the ECS service task execution role"
+}
+
+variable "additional_task_policy_statements" {
+  type = list(object({
+    actions   = list(string)
+    resources = list(string)
+  }))
+  default     = []
+  description = "Additional policy statements to attach to the ECS service task role"
 }
 
 variable "allow_incoming_requests" {
