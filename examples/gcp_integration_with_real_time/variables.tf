@@ -55,6 +55,12 @@ variable "gcp_ocean_integration_image" {
   type        = string
   description = "The Artifact Registry / Dockerhub image to deploy. Run docker pull --platform=linux/amd64 ghcr.io/port-labs/port-ocean-gcp and then push it to your preffered registry. For example: europe-west2-docker.pkg.dev/<project_id>/<your-artifact-registry>/<your_image_id>@sha256:123456789mysha987654321 OR europe-west2-docker.pkg.dev/<project_id>/<your-artifact-registry>/<your_image_id>"
 }
+
+variable "gcp_ocean_integration_cloud_run_location" {
+  type        = string
+  default     = "europe-west1"
+}
+
 variable "environment_variables" {
   type    = list(map(string))
   default = null
