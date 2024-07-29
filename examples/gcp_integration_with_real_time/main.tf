@@ -95,4 +95,5 @@ module "port_ocean_cloud_run" {
   project               = var.gcp_ocean_setup_project
   image                 = var.gcp_ocean_integration_image
   depends_on            = [time_sleep.wait_for_authentication_to_take_affect]
+  location              = var.gcp_ocean_integration_location
 }
