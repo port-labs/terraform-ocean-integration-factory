@@ -73,8 +73,8 @@ variable "initialize_port_resources" {
 
 variable "scheduled_resync_interval" {
   type        = number
-  default     = 60
-  description = "The interval to resync the integration"
+  default     = 1440
+  description = "The interval to resync the integration (in minutes)"
 }
 variable "event_listener" {
   type = object({
