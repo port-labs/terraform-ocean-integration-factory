@@ -51,6 +51,12 @@ variable "initialize_port_resources" {
   description = "If true, the module will create the port resources required for the integration"
 }
 
+variable "scheduled_resync_interval" {
+  type    = number
+  default = 1440
+  description = "The interval to resync the integration (in minutes)"
+}
+
 variable "integration_version" {
   type    = string
   default = "latest"
