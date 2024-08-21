@@ -20,6 +20,12 @@ variable "initialize_port_resources" {
     description = "If true, the module will initialize the default port resources (blueprints and relations)"
 }
 
+variable "scheduled_resync_interval" {
+    type = number
+    default = 60
+    description = "The interval to resync the integration"
+}
+
 variable "integration_identifier" {
     type = string
     description = "The identifier of the integration"

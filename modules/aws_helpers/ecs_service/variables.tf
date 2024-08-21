@@ -124,6 +124,12 @@ variable "initialize_port_resources" {
   description = "Whether to initialize the port resources"
 }
 
+variable "scheduled_resync_interval" {
+  type        = number
+  default     = 60
+  description = "The interval to resync the integration"
+}
+
 variable "integration" {
   type = object({
     identifier = optional(string)
