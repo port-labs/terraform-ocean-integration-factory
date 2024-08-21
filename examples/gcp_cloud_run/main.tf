@@ -17,15 +17,15 @@ data "google_projects" "all" {
 locals {
   envs = var.environment_variables != null ? var.environment_variables : [
     {
-      name  = "OCEAN__PORT__CLIENT_ID",
+      name  = upper("OCEAN__PORT__CLIENT_ID"),
       value = var.port_client_id
     },
     {
-      name  = "OCEAN__PORT__CLIENT_SECRET",
+      name  = upper("OCEAN__PORT__CLIENT_SECRET"),
       value = var.port_client_secret
     },
     {
-      name  = "OCEAN__PORT__BASE_URL",
+      name  = upper("OCEAN__PORT__BASE_URL"),
       value = var.port_base_url
     },
     {
