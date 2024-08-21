@@ -11,7 +11,7 @@ variable "port_client_secret" {
 variable "port_base_url" {
   type        = string
   description = "The Port Base url"
-  default = "https://api.getport.io"
+  default     = "https://api.getport.io"
 }
 variable "gcp_organization" {
   type        = string
@@ -62,8 +62,8 @@ variable "gcp_ocean_integration_image" {
 }
 
 variable "gcp_ocean_integration_cloud_run_location" {
-  type        = string
-  default     = "europe-west1"
+  type    = string
+  default = "europe-west1"
 }
 
 variable "environment_variables" {
@@ -111,9 +111,13 @@ variable "integration_version" {
   default     = "latest"
   description = "The version of the integration to deploy"
 }
-
 variable "integration_type" {
   type        = string
   description = "The type of the integration"
   default     = "gcp"
+}
+variable "scheduled_resync_interval" {
+  type        = number
+  default     = 1440
+  description = "The interval to resync the integration (in minutes)"
 }

@@ -29,6 +29,10 @@ locals {
       value = var.port_base_url
     },
     {
+      name  = upper("OCEAN__SCHEDULED_RESYNC_INTERVAL"),
+      value = tostring(var.scheduled_resync_interval)
+    },
+    {
       name  = upper("OCEAN__INITIALIZE_PORT_RESOURCES"),
       value = var.initialize_port_resources ? "true" : "false"
     },
@@ -71,8 +75,8 @@ locals {
     "pubsub.googleapis.com/Subscription",
     "pubsub.googleapis.com/Topic"
   ]
-  service_account_id = var.service_account_name != null ? var.service_account_name : "ocean-service-account"
-  role_id            = var.role_name != null ? var.role_name : "OceanIntegrationRole"
+  service_account_id        = var.service_account_name != null ? var.service_account_name : "ocean-service-account"
+  role_id                   = var.role_name != null ? var.role_name : "OceanIntegrationRole"
   specfic_existing_projects = [for project in data.google_projects.all.projects : project.project_id if contains(var.gcp_included_projects, project.project_id)]
 }
 module "port_ocean_authorization" {
