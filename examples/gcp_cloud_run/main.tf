@@ -11,9 +11,6 @@ terraform {
   }
 }
 
-data "google_projects" "all" {
-  filter = "parent.id=${var.gcp_organization}"
-}
 locals {
   envs = var.environment_variables != null ? var.environment_variables : [
     {
@@ -77,7 +74,6 @@ locals {
   ]
   service_account_id        = var.service_account_name != null ? var.service_account_name : "ocean-service-account"
   role_id                   = var.role_name != null ? var.role_name : "OceanIntegrationRole"
-  specfic_existing_projects = [for project in data.google_projects.all.projects : project.project_id if contains(var.gcp_included_projects, project.project_id)]
 }
 module "port_ocean_authorization" {
   source             = "../../modules/gcp_helpers/authorization"
@@ -86,7 +82,7 @@ module "port_ocean_authorization" {
   role_id            = local.role_id
   organization       = var.gcp_organization
   project            = var.gcp_ocean_setup_project
-  projects           = local.specfic_existing_projects
+  projects           = var.gcp_included_projects
   excluded_projects  = var.gcp_excluded_projects
 }
 module "port_ocean_pubsub" {
@@ -102,7 +98,7 @@ module "port_ocean_assets_feed" {
   feed_topic_project = var.gcp_ocean_setup_project
   billing_project    = var.gcp_ocean_setup_project
   assets_feed_id     = var.assets_feed_id
-  projects           = local.specfic_existing_projects
+  projects           = var.gcp_included_projects
   feed_topic         = module.port_ocean_pubsub.ocean_topic_name
   organization       = var.gcp_organization
   asset_types        = local.asset_types
