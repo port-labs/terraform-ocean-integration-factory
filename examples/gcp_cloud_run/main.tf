@@ -62,6 +62,7 @@ locals {
     "resourcemanager.folders.get",
     "resourcemanager.folders.list",
     "resourcemanager.organizations.get",
+    "cloudquotas.quotas.get",
     "run.routes.invoke",
   "run.jobs.run"]
   asset_types = var.assets_types_for_monitoring != null ? var.assets_types_for_monitoring : [
