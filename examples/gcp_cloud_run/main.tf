@@ -14,6 +14,10 @@ terraform {
 locals {
   envs = var.environment_variables != null ? var.environment_variables : [
     {
+      name = upper("GCP_PROJECT"),
+      value = var.gcp_ocean_setup_project
+    },
+    {
       name  = upper("OCEAN__PORT__CLIENT_ID"),
       value = var.port_client_id
     },
