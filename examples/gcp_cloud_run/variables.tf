@@ -121,3 +121,9 @@ variable "scheduled_resync_interval" {
   default     = 1440
   description = "The interval to resync the integration (in minutes)"
 }
+
+variable "ocean_service_account_custom_roles" {
+  type        = list(string)
+  description = "A list of custom roles you want to grant the Integration's Service account. The module will grant these permissions to every available project and to the setup project `gcp_ocean_setup_project`. Example value: [\"organizations/1234567890/roles/MyCustomRole\", \"organizations/1234567890/roles/MyOtherCustomRole\"]"
+  default     = []
+}

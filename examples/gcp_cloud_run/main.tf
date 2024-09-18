@@ -14,7 +14,7 @@ terraform {
 locals {
   envs = var.environment_variables != null ? var.environment_variables : [
     {
-      name = upper("GCP_PROJECT"),
+      name  = upper("GCP_PROJECT"),
       value = var.gcp_ocean_setup_project
     },
     {
@@ -79,8 +79,8 @@ locals {
     "pubsub.googleapis.com/Subscription",
     "pubsub.googleapis.com/Topic"
   ]
-  service_account_id        = var.service_account_name != null ? var.service_account_name : "ocean-service-account"
-  role_id                   = var.role_name != null ? var.role_name : "OceanIntegrationRole"
+  service_account_id = var.service_account_name != null ? var.service_account_name : "ocean-service-account"
+  role_id            = var.role_name != null ? var.role_name : "OceanIntegrationRole"
 }
 module "port_ocean_authorization" {
   source             = "../../modules/gcp_helpers/authorization"
@@ -91,6 +91,7 @@ module "port_ocean_authorization" {
   project            = var.gcp_ocean_setup_project
   projects           = var.gcp_included_projects
   excluded_projects  = var.gcp_excluded_projects
+  custom_roles       = var.ocean_service_account_custom_roles
 }
 module "port_ocean_pubsub" {
   source                     = "../../modules/gcp_helpers/pubsub"
