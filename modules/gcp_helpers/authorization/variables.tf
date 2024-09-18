@@ -22,3 +22,8 @@ variable "excluded_projects" {
   type    = list(string)
   default = []
 }
+
+variable "custom_roles" {
+  type    = list(string)
+  default = []
+}
