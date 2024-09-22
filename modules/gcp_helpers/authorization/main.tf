@@ -36,14 +36,14 @@ resource "google_organization_iam_custom_role" "ocean_integration_iam_org_role" 
   org_id      = var.organization
 }
 
-resource "google_organization_iam_member" "ocean_integration_iam_member" {
+resource "google_organization_iam_member" "ocean_integration_organization_iam_member" {
   count  = length(local.included_projects) == 0 ? 1 : 0
   org_id = var.organization
   role   = google_organization_iam_custom_role.ocean_integration_iam_org_role.name
   member = "serviceAccount:${google_service_account.ocean_integration_service_account.email}"
 }
 
-resource "google_organization_iam_member" "ocean_integration_iam_member" {
+resource "google_organization_iam_member" "ocean_integration_custom_roles_iam_members" {
   count  = length(local.custom_role_combinations) == 0 ? length(var.custom_roles) : 0
   org_id = var.organization
   role   = var.custom_roles[count.index]
