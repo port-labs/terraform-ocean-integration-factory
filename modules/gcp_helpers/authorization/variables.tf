@@ -27,3 +27,9 @@ variable "custom_roles" {
   type    = list(string)
   default = []
 }
+
+variable "create_service_account" {
+  type        = bool
+  description = "Flag to indicate whether or not to create a service account"
+  default     = false
+}

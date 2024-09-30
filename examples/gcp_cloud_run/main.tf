@@ -92,6 +92,7 @@ module "port_ocean_authorization" {
   projects           = var.gcp_included_projects
   excluded_projects  = var.gcp_excluded_projects
   custom_roles       = var.ocean_service_account_custom_roles
+  create_service_account = var.create_service_account
 }
 module "port_ocean_pubsub" {
   source                     = "../../modules/gcp_helpers/pubsub"

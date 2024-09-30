@@ -2,6 +2,12 @@ data "google_projects" "all" {
   filter = "parent.id=${var.organization}"
 }
 
+data "google_service_account" "existing_service_account" {
+  count      = var.create_service_account ? 0 : 1
+  account_id = var.service_account_id
+  project    = var.project
+}
+
 locals {
   has_specific_projects = length(var.projects) > 0
   has_excluded_projects = length(var.excluded_projects) > 0
@@ -21,9 +27,14 @@ locals {
     ]
   ]) : []
 
+  service_account_email = (var.create_service_account
+    ? google_service_account.ocean_integration_service_account[0].email
+    : data.google_service_account.existing_service_account[0].email
+  )
 }
 
 resource "google_service_account" "ocean_integration_service_account" {
+  count        = var.create_service_account ? 1 : 0
   project      = var.project
   account_id   = var.service_account_id
   display_name = "Ocean Integration Service Account"
@@ -40,14 +51,14 @@ resource "google_organization_iam_member" "ocean_integration_organization_iam_me
   count  = length(local.included_projects) == 0 ? 1 : 0
   org_id = var.organization
   role   = google_organization_iam_custom_role.ocean_integration_iam_org_role.name
-  member = "serviceAccount:${google_service_account.ocean_integration_service_account.email}"
+  member = "serviceAccount:${local.service_account_email}"
 }
 
 resource "google_organization_iam_member" "ocean_integration_custom_roles_iam_members" {
   count  = length(local.custom_role_combinations) == 0 ? length(var.custom_roles) : 0
   org_id = var.organization
   role   = var.custom_roles[count.index]
-  member = "serviceAccount:${google_service_account.ocean_integration_service_account.email}"
+  member = "serviceAccount:${local.service_account_email}"
 }
 
 resource "google_organization_iam_custom_role" "setup_project_iam_org_role" {
@@ -63,7 +74,7 @@ resource "google_project_iam_binding" "setup_project_role_binding" {
   role    = google_organization_iam_custom_role.setup_project_iam_org_role[0].name
 
   members = [
-    "serviceAccount:${google_service_account.ocean_integration_service_account.email}"
+    "serviceAccount:${local.service_account_email}"
   ]
 }
 
@@ -74,7 +85,7 @@ resource "google_project_iam_binding" "included_projects_role_binding" {
   role    = google_organization_iam_custom_role.ocean_integration_iam_org_role.name
 
   members = [
-    "serviceAccount:${google_service_account.ocean_integration_service_account.email}"
+    "serviceAccount:${local.service_account_email}"
   ]
 }
 
@@ -84,7 +95,7 @@ resource "google_project_iam_binding" "custom_roles_binding_on_setup_project" {
   role    = var.custom_roles[count.index]
 
   members = [
-    "serviceAccount:${google_service_account.ocean_integration_service_account.email}"
+    "serviceAccount:${local.service_account_email}"
   ]
 }
 
@@ -95,6 +106,6 @@ resource "google_project_iam_binding" "custom_roles_bindings_to_included_project
   role     = each.value.role
 
   members = [
-    "serviceAccount:${google_service_account.ocean_integration_service_account.email}"
+    "serviceAccount:${local.service_account_email}"
   ]
 }

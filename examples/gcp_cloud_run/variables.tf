@@ -19,7 +19,7 @@ variable "gcp_organization" {
 }
 variable "gcp_ocean_setup_project" {
   type        = string
-  description = "The Project ot create all the Integration's infrastructure (Topic, Subscription, Service account etc.) on. Format - your-project-name"
+  description = "The Project to create all the Integration's infrastructure (Topic, Subscription, Service account etc.) on. Format - your-project-name"
 }
 variable "gcp_included_projects" {
   type        = list(string)
@@ -126,4 +126,10 @@ variable "ocean_service_account_custom_roles" {
   type        = list(string)
   description = "A list of custom roles you want to grant the Integration's Service account. The module will grant these permissions to every available project and to the setup project `gcp_ocean_setup_project`. Example value: [\"organizations/1234567890/roles/MyCustomRole\", \"organizations/1234567890/roles/MyOtherCustomRole\"]"
   default     = []
+}
+
+variable "create_service_account" {
+  type        = bool
+  description = "Determines whether to create a new service account. Set to `true` to create the service account, or `false` to use as existing service account."
+  default     = true
 }
