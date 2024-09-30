@@ -128,6 +128,12 @@ variable "ocean_service_account_custom_roles" {
   default     = []
 }
 
+variable "create_role" {
+  type        = bool
+  description = "Indicates whether Terraform should create a new organizational IAM role. Set to `true` to create the role, or `false` to use as existing organizational IAM role."
+  default     = true
+}
+
 variable "create_service_account" {
   type        = bool
   description = "Determines whether to create a new service account. Set to `true` to create the service account, or `false` to use as existing service account."

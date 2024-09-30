@@ -27,6 +27,10 @@ locals {
     ]
   ]) : []
 
+  org_role_name = (var.create_role
+    ? google_organization_iam_custom_role.ocean_integration_iam_org_role[0].name
+    : "organizations/${var.organization}/roles/${var.role_id}")
+
   service_account_email = (var.create_service_account
     ? google_service_account.ocean_integration_service_account[0].email
     : data.google_service_account.existing_service_account[0].email
@@ -42,6 +46,7 @@ resource "google_service_account" "ocean_integration_service_account" {
 
 resource "google_organization_iam_custom_role" "ocean_integration_iam_org_role" {
   title       = "Ocean Integration organization role"
+  count       = var.create_role ? 1 : 0
   role_id     = var.role_id
   permissions = var.permissions
   org_id      = var.organization
@@ -50,7 +55,7 @@ resource "google_organization_iam_custom_role" "ocean_integration_iam_org_role" 
 resource "google_organization_iam_member" "ocean_integration_organization_iam_member" {
   count  = length(local.included_projects) == 0 ? 1 : 0
   org_id = var.organization
-  role   = google_organization_iam_custom_role.ocean_integration_iam_org_role.name
+  role   = local.org_role_name
   member = "serviceAccount:${local.service_account_email}"
 }
 
@@ -71,7 +76,7 @@ resource "google_organization_iam_custom_role" "setup_project_iam_org_role" {
 resource "google_project_iam_binding" "setup_project_role_binding" {
   count   = local.should_create_setup_role ? 1 : 0
   project = var.project
-  role    = google_organization_iam_custom_role.setup_project_iam_org_role[0].name
+  role   = local.org_role_name
 
   members = [
     "serviceAccount:${local.service_account_email}"
@@ -82,7 +87,7 @@ resource "google_project_iam_binding" "included_projects_role_binding" {
   count = length(local.included_projects)
 
   project = local.included_projects[count.index]
-  role    = google_organization_iam_custom_role.ocean_integration_iam_org_role.name
+  role    = local.org_role_name
 
   members = [
     "serviceAccount:${local.service_account_email}"

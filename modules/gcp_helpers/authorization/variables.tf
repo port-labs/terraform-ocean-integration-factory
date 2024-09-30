@@ -28,6 +28,12 @@ variable "custom_roles" {
   default = []
 }
 
+variable "create_role" {
+  type        = bool
+  description = "Whether to create the organizational role"
+  default     = true
+}
+
 variable "create_service_account" {
   type        = bool
   description = "Flag to indicate whether or not to create a service account"
