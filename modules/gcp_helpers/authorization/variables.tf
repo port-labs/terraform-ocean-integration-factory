@@ -37,5 +37,5 @@ variable "create_role" {
 variable "create_service_account" {
   type        = bool
   description = "Flag to indicate whether or not to create a service account"
-  default     = false
+  default     = true
 }
