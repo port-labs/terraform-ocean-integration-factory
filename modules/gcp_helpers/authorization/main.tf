@@ -8,6 +8,11 @@ data "google_service_account" "existing_service_account" {
   project    = var.project
 }
 
+data "google_iam_role" "existing_org_role" {
+  count      = var.create_role ? 0 : 1
+  name = format("organizations/%s/roles/%s", var.organization, var.role_id)
+}
+
 locals {
   has_specific_projects = length(var.projects) > 0
   has_excluded_projects = length(var.excluded_projects) > 0
@@ -29,7 +34,7 @@ locals {
 
   org_role_name = (var.create_role
     ? google_organization_iam_custom_role.ocean_integration_iam_org_role[0].name
-    : "organizations/${var.organization}/roles/${var.role_id}")
+    : data.google_iam_role.existing_org_role[0].name)
 
   service_account_email = (var.create_service_account
     ? google_service_account.ocean_integration_service_account[0].email
