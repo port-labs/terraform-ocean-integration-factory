@@ -6,7 +6,8 @@ from google.api_core.exceptions import NotFound, GoogleAPICallError, RetryError
 
 from utils import parse_protobuf_message, logger, parse_results
 from errors import EmptyParentError, ConflictingParentError
-
+import sys
+import json
 
 class AssetFeed:
     def __init__(self, client: AssetServiceClient =  AssetServiceClient()):
@@ -29,10 +30,11 @@ class AssetFeed:
         Returns:
             Dict[str, Any]: A dictionary containing feed details or error information.
         """
-        parent = self.parent(project, organization)
-        feed_name = f"{parent}/feeds/{feed_id}"
-        logger.debug(f"Constructed feed name: {feed_name}")
         try:
+            parent = self.parent(project, organization)
+            feed_name = f"{parent}/feeds/{feed_id}"
+            logger.debug(f"Constructed feed name: {feed_name}")
+
             feed = self.client.get_feed(name=feed_name)
             results = parse_protobuf_message(feed)
             
@@ -46,10 +48,18 @@ class AssetFeed:
         except NotFound:
             logger.info(f"Feed '{feed_id}' does not exist.")
             return {"exists": "false"}
+        
         except (GoogleAPICallError, RetryError) as api_error:
-            raise api_error
+            logger.error(f"API error occurred: {api_error}")
+            sys.exit(json.dumps({"error": f"API error occurred: {api_error}"}))
+
+        except (EmptyParentError, ConflictingParentError) as client_error:
+            logger.error(f"Error occurred: {client_error}")
+            sys.exit(json.dumps({"error": f"{client_error}"}))
+
         except Exception as e:
-            raise Exception("An unexpected error occurred: {e}")
+            logger.error(f"An unexpected error occurred: {e}")
+            sys.exit(json.dumps({"error": f"An unexpected error occurred. {e}"}))
 
     def parent(self, project: Optional[str] = None, organization: Optional[str] = None):
         if not project and not organization:

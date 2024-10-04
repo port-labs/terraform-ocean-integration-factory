@@ -12,8 +12,7 @@ def main():
 
     if not feed_id:
         logger.error("Missing 'feed_id' in input.")
-        print(json.dumps({"error": "Missing 'feed_id' in input."}))
-        sys.exit(1)
+        sys.exit(json.dumps({"error":"Missing 'feed_id' in input."}))
 
     asset_feed = AssetFeed()
 
