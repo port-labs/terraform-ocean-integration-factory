@@ -52,7 +52,10 @@ locals {
       })
     }
   ]
-  feed_topic_id = var.assets_feed_topic_id != null ? var.assets_feed_topic_id : "ocean-integration-topic"
+  resource_id_prefix = "${var.integration_identifier}-${var.environment}"
+  feed_topic_id = coalesce(var.assets_feed_topic_id, "${local.resource_id_prefix}-topic")
+  assets_feed_id = coalesce(var.assets_feed_id, "${local.resource_id_prefix}-assets-feed")
+
   permissions = var.ocean_integration_service_account_permissions != null ? var.ocean_integration_service_account_permissions : ["cloudasset.assets.exportResource",
     "cloudasset.assets.listCloudAssetFeeds",
     "cloudasset.assets.listResource",
@@ -79,8 +82,22 @@ locals {
     "pubsub.googleapis.com/Subscription",
     "pubsub.googleapis.com/Topic"
   ]
-  service_account_id = var.service_account_name != null ? var.service_account_name : "ocean-service-account"
-  role_id            = var.role_name != null ? var.role_name : "OceanIntegrationRole"
+
+  service_account_id  = coalesce(var.service_account_name, "${local.resource_id_prefix}-service-account")
+  role_id = coalesce(
+    var.role_name,
+    format(
+      "%sRole",
+      replace(
+        title(replace(local.resource_id_prefix, "-", " ")),
+        " ",
+        ""
+      )
+    )
+  )
+  cloud_run_service_name = coalesce(var.cloud_run_service_name, "${local.resource_id_prefix}-service")
+
+
 }
 module "port_ocean_authorization" {
   source             = "../../modules/gcp_helpers/authorization"
@@ -107,7 +124,7 @@ module "port_ocean_assets_feed" {
   source             = "../../modules/gcp_helpers/assets_feed"
   feed_topic_project = var.gcp_ocean_setup_project
   billing_project    = var.gcp_ocean_setup_project
-  assets_feed_id     = var.assets_feed_id
+  assets_feed_id     = local.assets_feed_id
   projects           = var.gcp_included_projects
   feed_topic         = module.port_ocean_pubsub.ocean_topic_name
   organization       = var.gcp_organization
@@ -119,8 +136,10 @@ resource "time_sleep" "wait_for_authentication_to_take_affect" {
   depends_on      = [module.port_ocean_authorization]
   create_duration = "180s"
 }
+
 module "port_ocean_cloud_run" {
   source                = "../../modules/gcp_helpers/cloud_run"
+  cloud_run_service_name = local.cloud_run_service_name
   service_account_name  = module.port_ocean_authorization.service_account_name
   environment_variables = local.envs
   project               = var.gcp_ocean_setup_project

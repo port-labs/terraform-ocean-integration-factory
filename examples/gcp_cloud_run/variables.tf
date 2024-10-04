@@ -39,13 +39,17 @@ variable "ocean_integration_service_account_permissions" {
   type    = list(string)
   default = null
 }
+variable "cloud_run_service_name" {
+  type = string
+  default = null
+}
 variable "assets_feed_topic_id" {
   type    = string
   default = null
 }
 variable "assets_feed_id" {
   type        = string
-  default     = "ocean-gcp-integration-assets-feed"
+  default     = null
   description = "The ID for the Ocean GCP Integration feed"
 }
 variable "service_account_name" {
@@ -138,4 +142,9 @@ variable "create_service_account" {
   type        = bool
   description = "Determines whether to create a new service account. Set to `true` to create the service account, or `false` to use as existing service account."
   default     = true
+}
+variable "environment" {
+  type        = string
+  description = "The environment for the integration (e.g., 'stg', 'prod')"
+  default = "prod"
 }
