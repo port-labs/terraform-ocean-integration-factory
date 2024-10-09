@@ -130,6 +130,7 @@ module "port_ocean_assets_feed" {
   organization       = var.gcp_organization
   asset_types        = local.asset_types
   depends_on         = [module.port_ocean_cloud_run]
+  integration_identifier = local.resource_id_prefix
   excluded_projects  = var.gcp_excluded_projects
 }
 resource "time_sleep" "wait_for_authentication_to_take_affect" {
