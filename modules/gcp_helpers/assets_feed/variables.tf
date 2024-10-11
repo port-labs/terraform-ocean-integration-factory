@@ -31,3 +31,9 @@ variable "excluded_projects" {
   type    = list(string)
   default = []
 }
+
+variable "integration_identifier" {
+  type = string
+  description = "Unique identifier for the integration, ensuring resource uniqueness in multi-deployment setups"
+  
+}
