@@ -10,6 +10,7 @@ data "external" "get_projects_feed" {
     feed_id = var.assets_feed_id
     project = each.key
     tag = var.integration_identifier
+    tag_resource = local.tag_resource
   }
 }
 
@@ -20,6 +21,7 @@ data "external" "check_org_asset_feed" {
     feed_id     = var.assets_feed_id
     organization = var.organization
     tag = var.integration_identifier
+    tag_resource = local.tag_resource
   }
 }
 
@@ -30,15 +32,13 @@ locals {
 
   included_projects = local.has_specific_projects ? var.projects : (local.has_excluded_projects ? local.filtered_projects : [])
 
-  managed_by = "terraform"
-
   project_feeds_managed_by_terraform = toset([
     for project in local.included_projects : project
     if data.external.get_projects_feed[project].result.managed_by_terraform == "true"
   ])
   create_org_feed = data.external.check_org_asset_feed.result.managed_by_terraform == "true" && length(local.project_feeds_managed_by_terraform) == 0
+  tag_resource = "cloudresourcemanager.googleapis.com"
 }
-
 
 resource "google_tags_tag_key" "key" {
   parent = "organizations/${var.organization}"
@@ -54,13 +54,13 @@ resource "google_tags_tag_value" "value" {
 
 resource "google_tags_tag_binding" "project_binding" {
   for_each = toset(local.project_feeds_managed_by_terraform)
-  parent = "//cloudresourcemanager.googleapis.com/projects/${each.key}"
+  parent = "//${local.tag_resource}/projects/${each.key}"
   tag_value = "tagValues/${google_tags_tag_value.value.name}"
 }
 
 resource "google_tags_tag_binding" "organization_binding" {
   count = length(local.project_feeds_managed_by_terraform) == 0 ? 1 : 0
-  parent = "//cloudresourcemanager.googleapis.com/organizations/${var.organization}"
+  parent = "//${local.tag_resource}/organizations/${var.organization}"
   tag_value = "tagValues/${google_tags_tag_value.value.name}"
 }
 
