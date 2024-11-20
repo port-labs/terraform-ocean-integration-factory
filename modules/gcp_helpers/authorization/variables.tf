@@ -23,6 +23,14 @@ variable "excluded_projects" {
   default = []
 }
 
+variable "project_label_filter" {
+  description = "Map containing the label key and value to filter projects"
+  type        = object({
+    key   = string
+    value = string
+  })
+}
+
 variable "custom_roles" {
   type    = list(string)
   default = []

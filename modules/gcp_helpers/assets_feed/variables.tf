@@ -31,3 +31,12 @@ variable "excluded_projects" {
   type    = list(string)
   default = []
 }
+
+
+variable "project_label_filter" {
+  description = "Map containing the label key and value to filter projects"
+  type        = object({
+    key   = string
+    value = string
+  })
+}

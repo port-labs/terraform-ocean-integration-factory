@@ -1,8 +1,11 @@
 data "google_projects" "all" {
-  filter = "parent.id=${var.organization}"
+  filter = local.project_filter
 }
 
 locals {
+  label_filter = var.project_label_filter != null ? " labels.${var.project_label_filter.key}:${var.project_label_filter.value}" : ""
+  project_filter = "parent.id:'${var.organization}'${local.label_filter}"
+  
   has_specific_projects = length(var.projects) > 0
   has_excluded_projects = length(var.excluded_projects) > 0
   filtered_projects     = local.has_excluded_projects ? [for project in data.google_projects.all.projects : project.project_id if !contains(var.excluded_projects, project.project_id)] : []

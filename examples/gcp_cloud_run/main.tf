@@ -90,6 +90,7 @@ module "port_ocean_authorization" {
   organization       = var.gcp_organization
   project            = var.gcp_ocean_setup_project
   projects           = var.gcp_included_projects
+  project_label_filter = var.gcp_project_label_filter
   excluded_projects  = var.gcp_excluded_projects
   custom_roles       = var.ocean_service_account_custom_roles
   create_role        = var.create_role
@@ -114,6 +115,7 @@ module "port_ocean_assets_feed" {
   asset_types        = local.asset_types
   depends_on         = [module.port_ocean_cloud_run]
   excluded_projects  = var.gcp_excluded_projects
+  project_label_filter = var.gcp_project_label_filter
 }
 resource "time_sleep" "wait_for_authentication_to_take_affect" {
   depends_on      = [module.port_ocean_authorization]

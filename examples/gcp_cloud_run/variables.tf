@@ -26,6 +26,15 @@ variable "gcp_included_projects" {
   description = "The Projects list you want the integration to collect from"
   default     = []
 }
+
+variable "gcp_project_label_filter" {
+  description = "Map containing the label key and value to filter projects"
+  type        = object({
+    key   = string
+    value = string
+  })
+}
+
 variable "gcp_excluded_projects" {
   type        = list(string)
   description = "The Projects list you want the integration NOT to collect from"
