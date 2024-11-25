@@ -27,12 +27,10 @@ variable "gcp_included_projects" {
   default     = []
 }
 
-variable "gcp_project_label_filter" {
-  description = "Map containing the label key and value to filter projects"
-  type        = object({
-    key   = string
-    value = string
-  })
+variable "gcp_project_label_filters" {
+  description = "Optional map of label key-value pairs to filter projects"
+  type        = map(string)
+  default     = {}
 }
 
 variable "gcp_excluded_projects" {

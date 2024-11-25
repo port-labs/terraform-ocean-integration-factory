@@ -23,12 +23,10 @@ variable "excluded_projects" {
   default = []
 }
 
-variable "project_label_filter" {
-  description = "Map containing the label key and value to filter projects"
-  type        = object({
-    key   = string
-    value = string
-  })
+variable "project_label_filters" {
+  description = "Optional map of label key-value pairs to filter projects"
+  type        = map(string)
+  default     = {}
 }
 
 variable "custom_roles" {

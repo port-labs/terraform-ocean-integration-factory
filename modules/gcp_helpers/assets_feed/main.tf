@@ -1,5 +1,13 @@
 data "google_projects" "all" {
-  filter = var.project_label_filter != null ? "parent.id:'${var.organization}' labels.${var.project_label_filter.key}:${var.project_label_filter.value}" : "parent.id:'${var.organization}'"
+  filter = join(" ", compact([
+    "parent.type:organization parent.id:${var.organization}",
+    length(var.project_label_filters) > 0 ? (
+      join(" ", [
+        for k, v in var.project_label_filters : 
+        "labels.${k}=${v}"
+      ])
+    ) : ""
+  ]))
 }
 
 
