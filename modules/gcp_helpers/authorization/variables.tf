@@ -23,10 +23,15 @@ variable "excluded_projects" {
   default = []
 }
 
-variable "project_label_filters" {
-  description = "Optional map of label key-value pairs to filter projects"
-  type        = map(string)
-  default     = {}
+variable "project_filter" {
+  description = <<-EOT
+    The filter string used to retrieve GCP projects, allowing complex filtering by combining multiple conditions with logical operators (AND | OR). Follows GCP's [filter expressions syntax](https://cloud.google.com/sdk/gcloud/reference/topic/filters). e.g.
+    parent.id:184606565139 labels.environment:production AND labels.team:devops
+    OR
+    labels.priority:high
+  EOT
+  type        = string
+  default     = null
 }
 
 variable "custom_roles" {

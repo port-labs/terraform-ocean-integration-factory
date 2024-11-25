@@ -33,6 +33,17 @@ variable "gcp_project_label_filters" {
   default     = {}
 }
 
+variable "gcp_project_filter" {
+  description = <<-EOT
+    The filter string used to retrieve GCP projects, allowing complex filtering by combining multiple conditions with logical operators (AND | OR). Follows GCP's [filter expressions syntax](https://cloud.google.com/sdk/gcloud/reference/topic/filters). e.g.
+    labels.environment:production AND labels.team:devops
+    OR
+    labels.priority:high
+  EOT
+  type        = string
+  default     = null
+}
+
 variable "gcp_excluded_projects" {
   type        = list(string)
   description = "The Projects list you want the integration NOT to collect from"
