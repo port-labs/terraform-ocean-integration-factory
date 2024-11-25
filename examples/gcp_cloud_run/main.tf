@@ -113,7 +113,7 @@ module "port_ocean_assets_feed" {
   feed_topic         = module.port_ocean_pubsub.ocean_topic_name
   organization       = var.gcp_organization
   asset_types        = local.asset_types
-  depends_on         = [module.port_ocean_cloud_run]
+  # depends_on         = [module.port_ocean_cloud_run]
   excluded_projects  = var.gcp_excluded_projects
   project_label_filters = var.gcp_project_label_filters
 }

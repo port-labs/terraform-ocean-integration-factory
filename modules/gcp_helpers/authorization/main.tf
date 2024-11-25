@@ -1,10 +1,10 @@
 data "google_projects" "all" {
   filter = join(" ", compact([
-    "parent.type:organization parent.id:${var.organization}",
+    "parent.id:${var.organization}",
     length(var.project_label_filters) > 0 ? (
       join(" ", [
         for k, v in var.project_label_filters : 
-        "labels.${k}=${v}"
+        "labels.${k}:${v}"
       ])
     ) : ""
   ]))
@@ -24,8 +24,9 @@ data "google_iam_role" "existing_org_role" {
 locals {
   has_specific_projects = length(var.projects) > 0
   has_excluded_projects = length(var.excluded_projects) > 0
-  filtered_projects     = local.has_excluded_projects ? [for project in data.google_projects.all.projects : project.project_id if !contains(var.excluded_projects, project.project_id)] : []
-  included_projects     = local.has_specific_projects ? var.projects : (local.has_excluded_projects ? local.filtered_projects : [])
+  filtered_projects     = local.has_excluded_projects ? [for project in data.google_projects.all.projects : project.project_id if !contains(var.excluded_projects, project.project_id)] : [for project in data.google_projects.all.projects : project.project_id]
+
+  included_projects = local.has_specific_projects ? var.projects : local.filtered_projects
 
   should_create_setup_role  = length(local.included_projects) > 0 && !contains(local.included_projects, var.project)
   get_project_permissions   = ["resourcemanager.projects.get", "resourcemanager.projects.list"]
