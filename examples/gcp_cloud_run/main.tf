@@ -81,7 +81,6 @@ locals {
   ]
   service_account_id = var.service_account_name != null ? var.service_account_name : "ocean-service-account"
   role_id            = var.role_name != null ? var.role_name : "OceanIntegrationRole"
-  project_filter  = coalesce(var.gcp_project_filter, "parent.id=${var.gcp_organization}")
 }
 module "port_ocean_authorization" {
   source             = "../../modules/gcp_helpers/authorization"
@@ -91,7 +90,7 @@ module "port_ocean_authorization" {
   organization       = var.gcp_organization
   project            = var.gcp_ocean_setup_project
   projects           = var.gcp_included_projects
-  project_filter     = local.project_filter
+  project_filter     = var.gcp_project_filter
   excluded_projects  = var.gcp_excluded_projects
   custom_roles       = var.ocean_service_account_custom_roles
   create_role        = var.create_role
@@ -115,7 +114,7 @@ module "port_ocean_assets_feed" {
   organization       = var.gcp_organization
   asset_types        = local.asset_types
   excluded_projects  = var.gcp_excluded_projects
-  project_filter     = local.project_filter
+  project_filter     = var.gcp_project_filter
 }
 resource "time_sleep" "wait_for_authentication_to_take_affect" {
   depends_on      = [module.port_ocean_authorization]
