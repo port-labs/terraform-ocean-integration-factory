@@ -7,8 +7,8 @@ resource "google_cloud_run_v2_service" "integration_service" {
       image = var.image
       resources {
         limits = {
-          cpu    = "2"
-          memory = "1024Mi"
+          cpu    = var.cloud_run_cpu
+          memory = var.cloud_run_memory
         }
       }
       ports {

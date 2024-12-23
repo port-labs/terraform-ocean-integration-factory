@@ -83,17 +83,17 @@ locals {
   role_id            = var.role_name != null ? var.role_name : "OceanIntegrationRole"
 }
 module "port_ocean_authorization" {
-  source             = "../../modules/gcp_helpers/authorization"
-  permissions        = local.permissions
-  service_account_id = local.service_account_id
-  role_id            = local.role_id
-  organization       = var.gcp_organization
-  project            = var.gcp_ocean_setup_project
-  projects           = var.gcp_included_projects
-  project_filter     = var.gcp_project_filter
-  excluded_projects  = var.gcp_excluded_projects
-  custom_roles       = var.ocean_service_account_custom_roles
-  create_role        = var.create_role
+  source                 = "../../modules/gcp_helpers/authorization"
+  permissions            = local.permissions
+  service_account_id     = local.service_account_id
+  role_id                = local.role_id
+  organization           = var.gcp_organization
+  project                = var.gcp_ocean_setup_project
+  projects               = var.gcp_included_projects
+  project_filter         = var.gcp_project_filter
+  excluded_projects      = var.gcp_excluded_projects
+  custom_roles           = var.ocean_service_account_custom_roles
+  create_role            = var.create_role
   create_service_account = var.create_service_account
 }
 module "port_ocean_pubsub" {
@@ -128,4 +128,6 @@ module "port_ocean_cloud_run" {
   image                 = var.gcp_ocean_integration_image
   depends_on            = [time_sleep.wait_for_authentication_to_take_affect]
   location              = var.gcp_ocean_integration_cloud_run_location
+  cloud_run_cpu         = var.gcp_cloud_run_cpu
+  cloud_run_memory      = var.gcp_cloud_run_memory
 }
