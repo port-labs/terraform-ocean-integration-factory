@@ -26,7 +26,16 @@ variable "gcp_included_projects" {
   description = "The Projects list you want the integration to collect from"
   default     = []
 }
-
+variable "gcp_cloud_run_cpu" {
+  type        = string
+  description = "The CPU limit for the Cloud Run service"
+  default     = "2"
+}
+variable "gcp_cloud_run_memory" {
+  type        = string
+  description = "The Memory limit for the Cloud Run service"
+  default     = "1024Mi"
+}
 variable "gcp_project_label_filters" {
   description = "Optional map of label key-value pairs to filter projects"
   type        = map(string)

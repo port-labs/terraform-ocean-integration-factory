@@ -7,6 +7,12 @@ variable "project" {
 variable "image" {
   type = string
 }
+variable "cloud_run_memory" {
+  type = string
+}
+variable "cloud_run_cpu" {
+  type = string
+}
 variable "environment_variables" {
   type    = list(map(string))
   default = null
