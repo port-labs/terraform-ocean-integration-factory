@@ -17,9 +17,21 @@ locals {
   has_specific_projects = length(var.projects) > 0
   has_excluded_projects = length(var.excluded_projects) > 0
   has_project_filter    = var.project_filter != null
-  filtered_projects     = local.has_excluded_projects ? [for project in data.google_projects.all.projects : project.project_id if !contains(var.excluded_projects, project.project_id)] : [for project in data.google_projects.all.projects : project.project_id]
 
-  included_projects = local.has_specific_projects ? var.projects : (local.has_project_filter ? local.filtered_projects : [])
+  # Safely get list of accessible projects, handling potential 403s
+  accessible_projects = try(data.google_projects.all.projects[*].project_id, [])
+  
+  filtered_projects = local.has_excluded_projects ? [
+    for project in local.accessible_projects : project 
+    if !contains(var.excluded_projects, project)
+  ] : local.accessible_projects
+
+  validated_projects = local.has_specific_projects ? [
+    for project in var.projects : project
+    if contains(local.accessible_projects, project)
+  ] : []
+
+  included_projects = local.has_specific_projects ? local.validated_projects : (local.has_project_filter ? local.filtered_projects : [])
 
   should_create_setup_role  = length(local.included_projects) > 0 && !contains(local.included_projects, var.project)
   get_project_permissions   = ["resourcemanager.projects.get", "resourcemanager.projects.list"]
