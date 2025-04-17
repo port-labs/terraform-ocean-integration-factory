@@ -26,6 +26,7 @@ module "port_ocean_ecs" {
   create_default_sg                           = var.create_default_sg
   additional_task_execution_policy_statements = var.additional_task_execution_policy_statements
   additional_task_policy_statements           = var.additional_task_policy_statements
+  assign_public_ip                            = var.assign_public_ip
 
 
   lb_target_group_arn         = var.allow_incoming_requests ? module.port_ocean_ecs_lb[0].target_group_arn : ""
