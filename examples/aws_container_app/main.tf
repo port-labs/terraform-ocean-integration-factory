@@ -22,7 +22,7 @@ module "port_ocean_ecs_lb" {
 
 module "port_ocean_ecs" {
   source = "../../modules/aws_helpers/ecs_service"
-
+  depends_on = [ module.port_ocean_ecs_lb ]
   subnets                                     = var.subnets
   create_ecs_cluster                          = var.create_ecs_cluster
   existing_cluster_arn                        = var.existing_cluster_arn
