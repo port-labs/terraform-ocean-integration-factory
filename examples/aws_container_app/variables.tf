@@ -232,3 +232,10 @@ variable "enable_apigw" {
   type = bool
   description = "Enable API Gateway and Events module integration"
 }
+
+variable "create_ecs_cluster" {
+  type = bool
+  default = true
+  description = "Enable to create ECS Cluster by the module - if false provide `existing_cluster_arn` variable"
+  
+}
