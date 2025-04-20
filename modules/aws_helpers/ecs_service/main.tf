@@ -75,6 +75,14 @@ resource "aws_ssm_parameter" "ocean_port_integration" {
   tags = var.tags
 }
 
+resource "aws_ssm_parameter" "additional_secrets" {
+  for_each = var.additional_secrets
+  name     = "ocean.${var.integration.type}.${var.integration.identifier}.${lower(each.key)}"
+  type     = "SecureString"
+  value    = each.value
+}
+
+
 resource "aws_ssm_parameter" "ocean_port_credentials" {
   name  = "ocean.${var.integration.type}.${var.integration.identifier}.port_credentials"
   type  = "SecureString"
@@ -162,9 +170,10 @@ data "aws_iam_policy_document" "task_execution_role_policy" {
       "ssm:GetParameters"
     ]
 
-    resources = [aws_ssm_parameter.ocean_port_credentials.arn, aws_ssm_parameter.ocean_port_integration.arn]
+    resources = concat([aws_ssm_parameter.ocean_port_credentials.arn, aws_ssm_parameter.ocean_port_integration.arn], [
+      for secret in aws_ssm_parameter.additional_secrets : secret.arn
+    ])
   }
-
   statement {
     actions = [
       "logs:CreateLogStream",
@@ -216,7 +225,12 @@ resource "aws_ecs_task_definition" "service_task_definition" {
         name        = local.service_name,
         networkMode = var.network_mode,
         environment = local.env,
-        secrets     = local.secrets
+        secrets = concat(local.secrets, [
+          for secret in keys(var.additional_secrets) : {
+            name      = secret
+            valueFrom = aws_ssm_parameter.additional_secrets[secret].name
+          }
+        ])
         logConfiguration = {
           logDriver = "awslogs",
           options = {

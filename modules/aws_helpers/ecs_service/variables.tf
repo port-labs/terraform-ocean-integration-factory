@@ -192,3 +192,7 @@ variable "create_ecs_cluster" {
   description = "Enable to create ECS Cluster by the module - if false provide `existing_cluster_arn` variable"
   
 }
+
+variable "additional_secrets" {
+  type = map(string)
+}

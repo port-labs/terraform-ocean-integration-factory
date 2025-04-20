@@ -22,7 +22,7 @@ module "port_ocean_ecs_lb" {
 
 module "port_ocean_ecs" {
   source = "../../modules/aws_helpers/ecs_service"
-  
+
   subnets                                     = var.subnets
   create_ecs_cluster                          = var.create_ecs_cluster
   existing_cluster_arn                        = var.existing_cluster_arn
@@ -54,7 +54,8 @@ module "port_ocean_ecs" {
       app_host = module.port_ocean_ecs_lb[0].dns_name
     }, var.integration.config) : var.integration.config
   }
-  tags = var.tags
+  additional_secrets = var.additional_secrets
+  tags               = var.tags
 }
 
 module "api_gateway" {
