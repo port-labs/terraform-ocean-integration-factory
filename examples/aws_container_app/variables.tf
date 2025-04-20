@@ -220,3 +220,9 @@ variable "account_list_regions_resources_policy" {
   default     = ["*"]
   description = "The resources to allow the task role to list regions, check out https://docs.aws.amazon.com/accounts/latest/reference/API_ListRegions.html for more information"
 }
+
+variable "tags" {
+  description = "A map of tags to apply to all resources"
+  type        = map(string)
+  default     = {}
+}

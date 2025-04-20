@@ -67,7 +67,7 @@ variable "ecs_use_fargate" {
 
 variable "subnets" {
   type        = list(string)
-  description = "The subnets to deploy the ECS service into"
+  description = "List of subnet IDs where the ECS tasks and load balancer will be deployed. Use private subnets when 'is_internal' is true and public subnets when 'is_internal' is false."
 }
 
 variable "existing_cluster_arn" {
@@ -178,4 +178,10 @@ variable "account_list_regions_resources_policy" {
   type        = list(string)
   default     = ["*"]
   description = "The resources to allow the task role to list regions, check out https://docs.aws.amazon.com/accounts/latest/reference/API_ListRegions.html for more information"
+}
+
+variable "tags" {
+  description = "A map of tags to apply to all resources"
+  type        = map(string)
+  default     = {}
 }

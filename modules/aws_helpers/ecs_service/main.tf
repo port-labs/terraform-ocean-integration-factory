@@ -61,6 +61,7 @@ resource "aws_security_group" "ecs_service_default_sg" {
       ipv6_cidr_blocks = ["::/0"]
     }
   }
+  tags = var.tags
 }
 
 resource "aws_ssm_parameter" "ocean_port_integration" {
@@ -71,22 +72,24 @@ resource "aws_ssm_parameter" "ocean_port_integration" {
     type       = var.integration.type
     config     = { for key, value in var.integration.config : key => value if value != null }
   })
+  tags = var.tags
 }
 
 resource "aws_ssm_parameter" "ocean_port_credentials" {
   name  = "ocean.${var.integration.type}.${var.integration.identifier}.port_credentials"
   type  = "SecureString"
   value = jsonencode({ for key, value in var.port : key => value if value != null })
+  tags  = var.tags
 }
 
 resource "aws_cloudwatch_log_group" "log_group" {
   name              = local.awslogs_group
   retention_in_days = var.logs_cloudwatch_retention
 
-  tags = {
+  tags = merge({
     Name       = local.service_name
     Automation = "Terraform"
-  }
+  }, var.tags)
 }
 
 data "aws_iam_policy_document" "ecs_assume_role_policy" {
@@ -127,10 +130,12 @@ data "aws_iam_policy_document" "task_role_account_base_policy" {
 resource "aws_iam_policy" "task_role_account_base_policy" {
   name   = "ecs-task-role-policy-${local.service_name}"
   policy = data.aws_iam_policy_document.task_role_account_base_policy.json
+  tags   = var.tags
 }
 resource "aws_iam_role" "task_role" {
   name               = "ecs-task-role-${local.service_name}"
   assume_role_policy = data.aws_iam_policy_document.ecs_assume_role_policy.json
+  tags               = var.tags
 }
 resource "aws_iam_role_policy_attachment" "task_role_readonly_policy_attachment" {
   role       = aws_iam_role.task_role.name
@@ -174,10 +179,12 @@ data "aws_iam_policy_document" "task_execution_role_policy" {
 resource "aws_iam_policy" "execution-policy" {
   name   = "ecs-task-execution-policy-${local.service_name}"
   policy = data.aws_iam_policy_document.task_execution_role_policy.json
+  tags   = var.tags
 }
 resource "aws_iam_role" "task_execution_role" {
   name               = "ecs-task-execution-role-${local.service_name}"
   assume_role_policy = data.aws_iam_policy_document.ecs_assume_role_policy.json
+  tags               = var.tags
 }
 resource "aws_iam_role_policy_attachment" "attachment" {
   role       = aws_iam_role.task_execution_role.name
@@ -228,11 +235,13 @@ resource "aws_ecs_task_definition" "service_task_definition" {
         ]
       }
   ])
+  tags = var.tags
 }
 
 resource "aws_ecs_cluster" "port_ocean_aws_integration_cluster" {
   name  = var.cluster_name
   count = var.existing_cluster_arn == "" ? 1 : 0
+  tags  = var.tags
 }
 
 resource "aws_ecs_service" "ecs_service" {
@@ -279,4 +288,5 @@ resource "aws_ecs_service" "ecs_service" {
     update = "10m"
     delete = "20m"
   }
+  tags = var.tags
 }

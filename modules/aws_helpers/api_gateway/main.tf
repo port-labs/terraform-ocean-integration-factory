@@ -1,12 +1,14 @@
 resource "aws_api_gateway_rest_api" "rest_api" {
   name        = var.rest_api_name
   description = "API Gateway for Port Ocean AWS Exporter"
+  tags        = var.tags
 }
 
 resource "aws_api_gateway_stage" "production" {
   stage_name    = "production"
   rest_api_id   = aws_api_gateway_rest_api.rest_api.id
   deployment_id = aws_api_gateway_deployment.port_ocean_exporter_gateway_deployment.id
+  tags          = var.tags
 }
 
 resource "aws_api_gateway_resource" "docs" {

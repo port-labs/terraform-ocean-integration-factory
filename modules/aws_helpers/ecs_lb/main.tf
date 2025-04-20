@@ -39,6 +39,7 @@ resource "aws_security_group" "default_ocean_sg" {
       ipv6_cidr_blocks = ["::/0"]
     }
   }
+  tags = var.tags
 }
 
 resource "aws_lb" "ocean_lb" {
@@ -48,6 +49,7 @@ resource "aws_lb" "ocean_lb" {
     var.additional_security_groups, [aws_security_group.default_ocean_sg[0].id]
   ) : var.additional_security_groups
   subnets = var.subnets
+  tags    = var.tags
 }
 
 resource "aws_lb_target_group" "ocean_tg" {
@@ -69,6 +71,7 @@ resource "aws_lb_target_group" "ocean_tg" {
   lifecycle {
     create_before_destroy = true
   }
+  tags = var.tags
 }
 
 resource "aws_lb_listener" "lb_listener" {
@@ -81,4 +84,5 @@ resource "aws_lb_listener" "lb_listener" {
   port              = local.lb_port
   protocol          = local.lb_protocol
   certificate_arn   = !local.is_certificate_domain_name_empty ? data.aws_acm_certificate.acm_certificate[0].arn : null
+  tags              = var.tags
 }
