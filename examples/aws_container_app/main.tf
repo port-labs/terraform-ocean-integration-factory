@@ -22,7 +22,7 @@ module "port_ocean_ecs_lb" {
 
 module "port_ocean_ecs" {
   source = "../../modules/aws_helpers/ecs_service"
-  depends_on = [ module.port_ocean_ecs_lb ]
+
   subnets                                     = var.subnets
   create_ecs_cluster                          = var.create_ecs_cluster
   existing_cluster_arn                        = var.existing_cluster_arn
@@ -51,7 +51,7 @@ module "port_ocean_ecs" {
     type       = var.integration.type
     identifier = var.integration.identifier
     config = var.allow_incoming_requests ? merge({
-      app_host = module.port_ocean_ecs_lb[0].dns_name
+      app_host = module.port_ocean_ecs_lb.dns_name
     }, var.integration.config) : var.integration.config
   }
   tags = var.tags
