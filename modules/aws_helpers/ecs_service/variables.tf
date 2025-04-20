@@ -185,3 +185,10 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "create_ecs_cluster" {
+  type = bool
+  default = true
+  description = "Enable to create ECS Cluster by the module - if false provide `existing_cluster_arn` variable"
+  
+}

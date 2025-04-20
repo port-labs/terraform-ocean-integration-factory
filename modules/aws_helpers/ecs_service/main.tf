@@ -240,7 +240,7 @@ resource "aws_ecs_task_definition" "service_task_definition" {
 
 resource "aws_ecs_cluster" "port_ocean_aws_integration_cluster" {
   name  = var.cluster_name
-  count = var.existing_cluster_arn == "" ? 1 : 0
+  count = var.create_ecs_cluster ? 1 : 0
   tags  = var.tags
 }
 
