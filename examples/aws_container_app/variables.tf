@@ -226,3 +226,9 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "enable_apigw" {
+  default = true
+  type = bool
+  description = "Enable API Gateway and Events module integration"
+}
