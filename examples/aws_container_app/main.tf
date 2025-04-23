@@ -7,11 +7,16 @@ locals {
 }
 
 module "port_ocean_ecs_lb" {
-  source                  = "../../modules/aws_helpers/ecs_lb"
-  count                   = var.allow_incoming_requests ? 1 : 0
-  vpc_id                  = var.vpc_id
-  subnets                 = var.subnets
-  certificate_domain_name = var.certificate_domain_name
+  source                     = "../../modules/aws_helpers/ecs_lb"
+  count                      = var.allow_incoming_requests ? 1 : 0
+  vpc_id                     = var.vpc_id
+  subnets                    = var.subnets
+  certificate_domain_name    = var.certificate_domain_name
+  create_egress_default_sg   = var.create_egress_default_sg
+  create_default_sg          = var.create_default_sg
+  is_internal                = var.is_internal
+  additional_security_groups = var.additional_security_groups
+  tags                       = var.tags
 }
 
 
@@ -19,7 +24,7 @@ module "port_ocean_ecs" {
   source = "../../modules/aws_helpers/ecs_service"
 
   subnets                                     = var.subnets
-  cluster_name                                = var.cluster_name
+  create_ecs_cluster                          = var.create_ecs_cluster
   existing_cluster_arn                        = var.existing_cluster_arn
   account_list_regions_resources_policy       = var.account_list_regions_resources_policy
   vpc_id                                      = var.vpc_id
@@ -33,6 +38,7 @@ module "port_ocean_ecs" {
   ecs_service_security_groups = local.ec2_service_security_groups
 
   image_registry = var.image_registry
+  container_port = var.container_port
 
   port = var.port
 
@@ -48,18 +54,22 @@ module "port_ocean_ecs" {
       app_host = module.port_ocean_ecs_lb[0].dns_name
     }, var.integration.config) : var.integration.config
   }
+  additional_secrets = var.additional_secrets
+  tags               = var.tags
 }
 
 module "api_gateway" {
   source = "../../modules/aws_helpers/api_gateway"
-  count  = var.allow_incoming_requests ? 1 : 0
+  count  = var.allow_incoming_requests && var.enable_apigw ? 1 : 0
 
   webhook_url = var.allow_incoming_requests ? module.port_ocean_ecs_lb[0].dns_name : ""
+  tags        = var.tags
 }
 
+# TODO: implment Tags for this module
 module "events" {
   source = "../../modules/aws_helpers/default_events"
-  count  = var.allow_incoming_requests ? 1 : 0
+  count  = var.allow_incoming_requests && var.enable_apigw ? 1 : 0
 
   api_key_param = var.integration.config.live_events_api_key
   target_arn    = var.allow_incoming_requests ? module.api_gateway[0].integration_webhook_api_arn : ""
