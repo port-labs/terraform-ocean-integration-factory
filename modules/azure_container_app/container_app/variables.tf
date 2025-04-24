@@ -11,7 +11,7 @@ variable "event_listener" {
 
 
     # KAFKA
-    brokers                  = optional(list(string))
+    brokers                  = optional(string)
     security_protocol        = optional(list(string))
     authentication_mechanism = optional(list(string))
     kafka_security_enabled   = optional(list(bool))
