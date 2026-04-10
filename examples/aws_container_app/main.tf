@@ -46,8 +46,6 @@ module "port_ocean_ecs" {
   integration = {
     type       = var.integration.type
     identifier = var.integration.identifier
-    cpu        = var.cpu
-    memory     = var.memory
     config = var.allow_incoming_requests ? merge({
       app_host = module.port_ocean_ecs_lb[0].dns_name
     }, var.integration.config) : var.integration.config
