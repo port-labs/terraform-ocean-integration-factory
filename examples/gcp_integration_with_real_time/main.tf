@@ -35,6 +35,7 @@ locals {
   permissions = var.gcp_ocean_integration_sa_permissions != null ? var.gcp_ocean_integration_sa_permissions : ["cloudasset.assets.exportResource",
     "cloudasset.assets.listCloudAssetFeeds",
     "cloudasset.assets.listResource",
+    "cloudasset.assets.searchAllIamPolicies",
     "cloudasset.assets.searchAllResources",
     "cloudasset.feeds.create",
     "cloudasset.feeds.list",

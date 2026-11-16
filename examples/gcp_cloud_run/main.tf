@@ -56,6 +56,7 @@ locals {
   permissions = var.ocean_integration_service_account_permissions != null ? var.ocean_integration_service_account_permissions : ["cloudasset.assets.exportResource",
     "cloudasset.assets.listCloudAssetFeeds",
     "cloudasset.assets.listResource",
+    "cloudasset.assets.searchAllIamPolicies",
     "cloudasset.assets.searchAllResources",
     "cloudasset.feeds.create",
     "cloudasset.feeds.list",
