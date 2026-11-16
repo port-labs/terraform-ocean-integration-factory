@@ -40,6 +40,8 @@ locals {
     "cloudasset.feeds.list",
     "pubsub.topics.list",
     "pubsub.topics.get",
+    "pubsub.subscriptions.list",
+    "pubsub.subscriptions.get",
     "resourcemanager.projects.get",
     "resourcemanager.projects.list",
     "resourcemanager.folders.get",
