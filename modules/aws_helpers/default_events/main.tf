@@ -28,6 +28,30 @@ module "s3_event" {
   target_arn    = var.target_arn
 }
 
+# ECS Cluster
+module "ecs_cluster_event" {
+  source = "../event"
+
+  name        = "${local.prefix}-ecs-cluster-trails"
+  description = "Rule to catch all CloudTrail events related to ECS clusters"
+  event_pattern = {
+    source      = ["aws.ecs"]
+    detail-type = ["AWS API Call via CloudTrail"]
+    detail = {
+      eventSource = ["ecs.amazonaws.com"]
+    }
+  }
+  input_paths = {
+    resource_type = "AWS::ECS::Cluster"
+    account_id    = "$.detail.userIdentity.accountId"
+    aws_region    = "$.detail.awsRegion"
+    event_name    = "$.detail.eventName"
+    identifier    = "$.detail.responseElements.clusterName"
+  }
+
+  api_key_param = var.api_key_param
+  target_arn    = var.target_arn
+}
 
 module "cloudformation_status_event" {
   source = "../event"
