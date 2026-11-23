@@ -25,7 +25,7 @@ variable "certificate_domain_name" {
   default     = ""
   description = "The domain name for the certificate"
 }
-
+# TODO: Variable not used
 variable "certificate_arn" {
   type        = string
   default     = ""
@@ -54,9 +54,15 @@ variable "egress_ports" {
   default     = []
   description = "The ports to allow egress traffic to"
 }
-
+# TODO: Variable not used
 variable "app_host" {
   type        = string
   default     = ""
   description = "The host url to use for the app"
+}
+
+variable "tags" {
+  description = "A map of tags to apply to all resources"
+  type        = map(string)
+  default     = {}
 }

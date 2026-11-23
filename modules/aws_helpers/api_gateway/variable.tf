@@ -9,3 +9,9 @@ variable "webhook_url" {
   default     = "https://<your-app-url>/integration/webhook"
   description = "The webhook URL"
 }
+
+variable "tags" {
+  description = "A map of tags to apply to all resources"
+  type        = map(string)
+  default     = {}
+}
