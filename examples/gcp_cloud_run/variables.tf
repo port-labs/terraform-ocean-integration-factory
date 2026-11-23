@@ -75,6 +75,21 @@ variable "assets_feed_id" {
   default     = "ocean-gcp-integration-assets-feed"
   description = "The ID for the Ocean GCP Integration feed"
 }
+variable "enable_iam_policy_feed" {
+  type        = bool
+  default     = false
+  description = "Create a second Cloud Asset feed for IAM policy changes, which the integration's iamPolicy kind consumes as live events. Off by default: the kind is opt-in, so an install that does not map it would only receive events it drops."
+}
+variable "iam_policy_feed_id" {
+  type        = string
+  default     = "ocean-gcp-integration-iam-policy-feed"
+  description = "The ID for the IAM policy feed. Must differ from assets_feed_id, which shares its parent."
+}
+variable "iam_policy_asset_types" {
+  type        = list(string)
+  default     = null
+  description = "The asset types the IAM policy feed publishes changes for. Set this to the same list as the assetTypes selector on your iamPolicy mapping; the integration drops events for any type that mapping does not list. Defaults to assets_types_for_monitoring."
+}
 variable "service_account_name" {
   type    = string
   default = null

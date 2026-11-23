@@ -1,5 +1,5 @@
 data "google_projects" "all" {
-  filter =  coalesce(var.project_filter, "parent.id=${var.organization}")
+  filter = coalesce(var.project_filter, "parent.id=${var.organization}")
 }
 
 
@@ -17,7 +17,7 @@ resource "google_cloud_asset_organization_feed" "ocean_integration_assets_feed" 
   billing_project = var.billing_project
   feed_id         = var.assets_feed_id
   org_id          = var.organization
-  content_type    = "RESOURCE"
+  content_type    = var.content_type
 
   asset_types = var.asset_types
 
@@ -33,7 +33,7 @@ resource "google_cloud_asset_project_feed" "ocean_integration_per_project_feed" 
   project         = each.key
   billing_project = var.billing_project
   feed_id         = var.assets_feed_id
-  content_type    = "RESOURCE"
+  content_type    = var.content_type
 
   asset_types = var.asset_types
 
