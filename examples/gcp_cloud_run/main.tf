@@ -80,8 +80,9 @@ locals {
     "pubsub.googleapis.com/Subscription",
     "pubsub.googleapis.com/Topic"
   ]
-  service_account_id = var.service_account_name != null ? var.service_account_name : "ocean-service-account"
-  role_id            = var.role_name != null ? var.role_name : "OceanIntegrationRole"
+  iam_policy_asset_types = var.iam_policy_asset_types != null ? var.iam_policy_asset_types : local.asset_types
+  service_account_id     = var.service_account_name != null ? var.service_account_name : "ocean-service-account"
+  role_id                = var.role_name != null ? var.role_name : "OceanIntegrationRole"
 }
 module "port_ocean_authorization" {
   source                 = "../../modules/gcp_helpers/authorization"
@@ -114,6 +115,21 @@ module "port_ocean_assets_feed" {
   feed_topic         = module.port_ocean_pubsub.ocean_topic_name
   organization       = var.gcp_organization
   asset_types        = local.asset_types
+  excluded_projects  = var.gcp_excluded_projects
+  project_filter     = var.gcp_project_filter
+}
+
+module "port_ocean_iam_policy_feed" {
+  count              = var.enable_iam_policy_feed ? 1 : 0
+  source             = "../../modules/gcp_helpers/assets_feed"
+  content_type       = "IAM_POLICY"
+  feed_topic_project = var.gcp_ocean_setup_project
+  billing_project    = var.gcp_ocean_setup_project
+  assets_feed_id     = var.iam_policy_feed_id
+  projects           = var.gcp_included_projects
+  feed_topic         = module.port_ocean_pubsub.ocean_topic_name
+  organization       = var.gcp_organization
+  asset_types        = local.iam_policy_asset_types
   excluded_projects  = var.gcp_excluded_projects
   project_filter     = var.gcp_project_filter
 }

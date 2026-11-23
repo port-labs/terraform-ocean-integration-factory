@@ -22,6 +22,12 @@ variable "asset_types" {
   type = list(string)
 }
 
+variable "content_type" {
+  type        = string
+  default     = "RESOURCE"
+  description = "The Cloud Asset Inventory content type the feed publishes. A feed carries exactly one, so IAM policy changes need their own feed alongside the resource one."
+}
+
 variable "projects" {
   type    = list(string)
   default = []
